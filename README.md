@@ -1,6 +1,6 @@
-# woo_ecommerce_flutter_app
+# Flutter Firebase Ecommerce App
 
-A new Flutter project.
+An Ecommerce Consumer App using Firebase as Backend and Razopy as payment service.
 
 ## Getting Started
 
