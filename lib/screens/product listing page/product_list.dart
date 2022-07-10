@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_ecommerce_app/widgets/custom_scaffold.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/my%20cart%20page/my_cart.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_firebase_ecommerce_app/screens/search%20page/search_page
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/products_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/widgets/custom_nested_scroll_view_scaffold.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_loading_indicator.dart';
 import '../product description page/product_item_page.dart';
 import 'components/product_list_tile.dart';
@@ -52,9 +52,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomNestedScrollViewScaffold(
+    return CustomScaffold(
       title: widget.name,
-      showSortButton: true,
       appBarActions: [
         // IconButton(
         //     onPressed: () {

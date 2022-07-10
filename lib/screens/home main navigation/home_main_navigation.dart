@@ -197,207 +197,167 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
             ),
           ),
         ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Divider(height: 1),
-            ValueListenableBuilder<int>(
-              valueListenable: _currentIndex,
-              builder: (context, value, _) => Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenHeight! * .015),
-                child: Consumer<CartProvider>(
-                  builder: (context, cartprovider, _) => BottomNavigationBar(
-                    currentIndex: value,
-                    backgroundColor: Theme.of(context).colorScheme.background,
-                    showUnselectedLabels: true,
-                    type: BottomNavigationBarType.fixed,
-                    selectedItemColor: Theme.of(context).colorScheme.primary,
-                    selectedLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 12.5),
-                    unselectedLabelStyle: const TextStyle(fontSize: 12.5),
-                    onTap: (index) {
-                      if (index != _screens.length - 1) {
-                        _currentIndex.value = index;
-                        _pageController.animateToPage(index,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease);
-                      } else {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (_) => const ProfileBottomSheet());
-                      }
-                    },
-                    items: [
-                      BottomNavigationBarItem(
-                          icon: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.5),
-                              child: Icon(_screenBottomNavigationItemData[0]
-                                  ["inactiveIcon"])),
-                          activeIcon: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.5),
-                              child: Icon(_screenBottomNavigationItemData[0]
-                                  ["activeIcon"])),
-                          label: _screenBottomNavigationItemData[0]["title"]),
-                      BottomNavigationBarItem(
-                          icon: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.5),
-                              child: Icon(_screenBottomNavigationItemData[1]
-                                  ["inactiveIcon"])),
-                          activeIcon: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.5),
-                              child: Icon(_screenBottomNavigationItemData[1]
-                                  ["activeIcon"])),
-                          label: _screenBottomNavigationItemData[1]["title"]),
-                      BottomNavigationBarItem(
-                          icon: Stack(
-                            children: [
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5.5),
-                                  child: Icon(_screenBottomNavigationItemData[2]
-                                      ["inactiveIcon"])),
-                              if (cartprovider.isDataLoaded == true &&
-                                  cartprovider
-                                      .allCartData!.products!.isNotEmpty)
-                                Positioned.fill(
-                                    child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: MediaQuery.of(context)
-                                                  .platformBrightness ==
-                                              Brightness.dark
-                                          ? Colors.green[300]
-                                          : Colors.green,
-                                    ),
-                                    height: 15,
-                                    width: 15,
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      cartprovider.allCartData!.products!.length
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 8.5,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                      ),
-                                    ),
-                                  ),
-                                ))
-                            ],
-                          ),
-                          activeIcon: Stack(
-                            children: [
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5.5),
-                                  child: Icon(_screenBottomNavigationItemData[2]
-                                      ["activeIcon"])),
-                              if (cartprovider.isDataLoaded == true &&
-                                  cartprovider
-                                      .allCartData!.products!.isNotEmpty)
-                                Positioned.fill(
-                                    child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(
-                                    height: 15,
-                                    width: 15,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: MediaQuery.of(context)
-                                                  .platformBrightness ==
-                                              Brightness.dark
-                                          ? Colors.green[300]
-                                          : Colors.green,
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      cartprovider.allCartData!.products!.length
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 8.5,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                      ),
-                                    ),
-                                  ),
-                                ))
-                            ],
-                          ),
-                          label: _screenBottomNavigationItemData[2]["title"]),
-                      BottomNavigationBarItem(
-                          icon: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.5),
-                              child: Icon(_screenBottomNavigationItemData[3]
-                                  ["inactiveIcon"])),
-                          activeIcon: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5.5),
-                              child: Icon(_screenBottomNavigationItemData[3]
-                                  ["activeIcon"])),
-                          label: _screenBottomNavigationItemData[3]["title"]),
-                    ],
-                    // items: List.generate(_screenBottomNavigationItemData.length,
-                    //     (index) {
-                    //   return BottomNavigationBarItem(
-                    //     icon: Padding(
-                    //       padding: const EdgeInsets.symmetric(vertical: 5.5),
-                    //       child: Icon(_screenBottomNavigationItemData[index]
-                    //           ["inactiveIcon"]),
-                    //     ),
-                    //     label: _screenBottomNavigationItemData[index]["title"],
-                    //     activeIcon: Stack(
-                    //       children: [
-                    //         Padding(
-                    //           padding: const EdgeInsets.symmetric(vertical: 5.5),
-                    //           child: Icon(
-                    //             _screenBottomNavigationItemData[index]
-                    //                 ["activeIcon"],
-                    //           ),
-                    //         ),
-                    // Positioned.fill(
-                    //     child: Align(
-                    //   alignment: Alignment.topRight,
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(
-                    //           SizeConfig.screenWidth!),
-                    //       color: Colors.green,
-                    //     ),
-                    //     padding: EdgeInsets.all(
-                    //         SizeConfig.screenWidth! * .0075),
-                    //     child: const Text(
-                    //       "200",
-                    //       style: TextStyle(
-                    //         fontWeight: FontWeight.bold,
-                    //         fontSize: 6.5,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ))
-                    //       ],
-                    //     ),
-                    //   );
-                    // }),
-                  ),
+        bottomNavigationBar: ValueListenableBuilder<int>(
+          valueListenable: _currentIndex,
+          builder: (context, value, _) => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .color!
+                      .withOpacity(0.25),
+                  blurRadius: 2.0,
+                ),
+              ],
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.screenHeight! * .015),
+            child: Consumer<CartProvider>(
+              builder: (context, cartprovider, _) => Theme(
+                data: Theme.of(context).copyWith(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: BottomNavigationBar(
+                  currentIndex: value,
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  showUnselectedLabels: true,
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: Theme.of(context).colorScheme.primary,
+                  selectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12.5),
+                  unselectedLabelStyle: const TextStyle(fontSize: 12.5),
+                  onTap: (index) {
+                    if (index != _screens.length - 1) {
+                      _currentIndex.value = index;
+                      _pageController.animateToPage(index,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease);
+                    } else {
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          elevation: 0,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (_) => const ProfileBottomSheet());
+                    }
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                        icon: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.5),
+                            child: Icon(_screenBottomNavigationItemData[0]
+                                ["inactiveIcon"])),
+                        activeIcon: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.5),
+                            child: Icon(_screenBottomNavigationItemData[0]
+                                ["activeIcon"])),
+                        tooltip: "",
+                        label: _screenBottomNavigationItemData[0]["title"]),
+                    BottomNavigationBarItem(
+                        icon: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.5),
+                            child: Icon(_screenBottomNavigationItemData[1]
+                                ["inactiveIcon"])),
+                        activeIcon: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.5),
+                            child: Icon(_screenBottomNavigationItemData[1]
+                                ["activeIcon"])),
+                        tooltip: "",
+                        label: _screenBottomNavigationItemData[1]["title"]),
+                    BottomNavigationBarItem(
+                        icon: Stack(
+                          children: [
+                            Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5.5),
+                                child: Icon(_screenBottomNavigationItemData[2]
+                                    ["inactiveIcon"])),
+                            if (cartprovider.isDataLoaded == true &&
+                                cartprovider.allCartData!.products!.isNotEmpty)
+                              Positioned.fill(
+                                  child: Align(
+                                alignment: Alignment.topRight,
+                                child: BadgeContainer(
+                                    number: cartprovider
+                                        .allCartData!.products!.length),
+                              ))
+                          ],
+                        ),
+                        activeIcon: Stack(
+                          children: [
+                            Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5.5),
+                                child: Icon(_screenBottomNavigationItemData[2]
+                                    ["activeIcon"])),
+                            if (cartprovider.isDataLoaded == true &&
+                                cartprovider.allCartData!.products!.isNotEmpty)
+                              Positioned.fill(
+                                  child: Align(
+                                alignment: Alignment.topRight,
+                                child: BadgeContainer(
+                                    number: cartprovider
+                                        .allCartData!.products!.length),
+                              ))
+                          ],
+                        ),
+                        tooltip: "",
+                        label: _screenBottomNavigationItemData[2]["title"]),
+                    BottomNavigationBarItem(
+                        icon: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.5),
+                            child: Icon(_screenBottomNavigationItemData[3]
+                                ["inactiveIcon"])),
+                        activeIcon: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.5),
+                            child: Icon(_screenBottomNavigationItemData[3]
+                                ["activeIcon"])),
+                        tooltip: "",
+                        label: _screenBottomNavigationItemData[3]["title"]),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BadgeContainer extends StatelessWidget {
+  const BadgeContainer({
+    Key? key,
+    required this.number,
+  }) : super(key: key);
+
+  final int number;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 15,
+      width: 15,
+      decoration: BoxDecoration(
+        shape: number < 99 ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius:
+            number < 99 ? null : BorderRadius.circular(SizeConfig.screenWidth!),
+        color: MediaQuery.of(context).platformBrightness == Brightness.dark
+            ? Colors.green[300]
+            : Colors.green,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        number.toString(),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 8.5,
+          color: Theme.of(context).colorScheme.background,
         ),
       ),
     );

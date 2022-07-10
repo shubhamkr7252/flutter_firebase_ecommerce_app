@@ -1,4 +1,6 @@
 *.env.local
 
-**/android/google-services.json
-
+**/android/app/google-services.json
+**/build/
+.dart_tool/
+.idea/

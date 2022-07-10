@@ -506,12 +506,6 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "lazy_load_scrollview",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/lazy_load_scrollview-1.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "lints",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/lints-1.0.1",
       "packageUri": "lib/",
@@ -902,7 +896,7 @@
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-07-10T18:39:34.823130Z",
+  "generated": "2022-07-10T22:09:46.890147Z",
   "generator": "pub",
   "generatorVersion": "2.17.1"
 }
