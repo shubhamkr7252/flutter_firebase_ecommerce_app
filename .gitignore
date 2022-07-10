@@ -1,0 +1,4 @@
+*.env.local
+
+**/android/google-services.json
+
