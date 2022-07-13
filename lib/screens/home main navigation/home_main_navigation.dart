@@ -1,22 +1,23 @@
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/notification_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/home/home_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/my_cart_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/notification/notification_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/profile/profile_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/search/search_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/widgets/custom_badge_widget.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/cart_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/search_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/all%20categories/all_categories.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/home%20page/home.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/notification%20page/notification_page.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/search%20page/search_page.dart';
-import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/all%20categories/all_categories_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/colors.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/my%20cart%20page/my_cart.dart';
+import '../../service/navigator_service.dart';
 import '../../theme/size.dart';
-import '../profile page/profile_bottom_sheet.dart';
 
 class HomeMainNavigation extends StatefulWidget {
   const HomeMainNavigation({Key? key}) : super(key: key);
@@ -26,17 +27,20 @@ class HomeMainNavigation extends StatefulWidget {
 }
 
 class _HomeMainNavigationState extends State<HomeMainNavigation> {
-  late List<Widget> _screens;
   late CartProvider _cartProvider;
   late UserProvider _userProvider;
+  late NotificationProvider _notificationProvider;
 
+  late List<Widget> _screens;
   late ValueNotifier<int> _currentIndex;
-  late PreloadPageController _pageController;
+  late PageController _pageController;
   late List<Map<String, dynamic>> _screenBottomNavigationItemData;
 
   @override
   void dispose() {
     _currentIndex.dispose();
+    _pageController.dispose();
+
     super.dispose();
   }
 
@@ -44,13 +48,18 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
   void initState() {
     _cartProvider = Provider.of(context, listen: false);
     _userProvider = Provider.of(context, listen: false);
+    _notificationProvider = Provider.of(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_cartProvider.isDataLoaded == false) {
         _cartProvider.fetchCartData(userId: _userProvider.getCurrentUser!.id!);
       }
+      if (_notificationProvider.isDataLoaded == false) {
+        _notificationProvider.fetchNotificationData(
+            userId: _userProvider.getCurrentUser!.id!);
+      }
     });
 
-    _pageController = PreloadPageController();
+    _pageController = PageController();
     _screenBottomNavigationItemData = [
       {
         "activeIcon": FlutterRemix.home_6_fill,
@@ -60,7 +69,7 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
       {
         "activeIcon": FlutterRemix.layout_4_fill,
         "inactiveIcon": FlutterRemix.layout_4_line,
-        "title": "Catalog"
+        "title": "Categories"
       },
       {
         "activeIcon": FlutterRemix.shopping_cart_2_fill,
@@ -75,10 +84,10 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
     ];
 
     _screens = [
-      const Home(),
-      const AllCategories(),
-      const MyCart(),
-      const SizedBox(),
+      const HomeScreen(),
+      const AllCategoriesScreen(),
+      const MyCartScreen(),
+      const ProfileScreen(),
     ];
 
     _currentIndex = ValueNotifier<int>(0);
@@ -160,18 +169,67 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: IconButton(
-                            onPressed: () {
+                      Consumer<UserProvider>(
+                        builder: (context, userprovider, _) => Padding(
+                          padding: EdgeInsets.only(
+                              left: SizeConfig.screenWidth! * .03),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            borderRadius: BorderRadius.circular(
+                                SizeConfig.screenHeight! * .01),
+                            onTap: () {
                               NavigatorService.push(context,
-                                  page: const NotificationPage());
+                                  page: NotificationScreen(
+                                      userId:
+                                          userprovider.getCurrentUser!.id!));
                             },
-                            icon: Icon(
-                              FlutterRemix.notification_3_fill,
-                              color: Theme.of(context).colorScheme.background,
-                              size: SizeConfig.screenWidth! * .055,
-                            )),
+                            child: Consumer<NotificationProvider>(
+                              builder: (context, notificationprovider, _) =>
+                                  Padding(
+                                padding: EdgeInsets.all(
+                                    SizeConfig.screenWidth! * .015),
+                                child: Stack(
+                                  children: [
+                                    if (notificationprovider.isDataLoaded ==
+                                            true &&
+                                        notificationprovider
+                                            .allNotificationData.isNotEmpty)
+                                      Icon(
+                                        FlutterRemix.notification_3_fill,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .error
+                                            .withOpacity(0.75),
+                                        size: SizeConfig.screenWidth! * .06,
+                                      ),
+                                    Icon(
+                                      FlutterRemix.notification_3_line,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                      size: SizeConfig.screenWidth! * .06,
+                                    ),
+                                    // if (notificationprovider.isDataLoaded ==
+                                    //         true &&
+                                    //     notificationprovider
+                                    //         .allNotificationData.isNotEmpty)
+                                    //   Positioned.fill(
+                                    //     child: Align(
+                                    //       alignment: Alignment.topRight,
+                                    //       child: CustomBadgeWidget(
+                                    //         bgColor: Theme.of(context)
+                                    //             .colorScheme
+                                    //             .error,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   )),
@@ -188,11 +246,10 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
           ),
           child: ValueListenableBuilder<int>(
             valueListenable: _currentIndex,
-            builder: (context, value, child) => PreloadPageView.builder(
+            builder: (context, value, child) => PageView.builder(
               itemBuilder: (context, index) => _screens[index],
               itemCount: _screens.length,
               controller: _pageController,
-              preloadPagesCount: 2,
               physics: const NeverScrollableScrollPhysics(),
             ),
           ),
@@ -227,24 +284,16 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                   backgroundColor: Colors.transparent,
                   showUnselectedLabels: true,
                   type: BottomNavigationBarType.fixed,
-                  selectedItemColor: Theme.of(context).colorScheme.primary,
+                  selectedItemColor:
+                      Theme.of(context).colorScheme.inversePrimary,
                   selectedLabelStyle: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 12.5),
                   unselectedLabelStyle: const TextStyle(fontSize: 12.5),
                   onTap: (index) {
-                    if (index != _screens.length - 1) {
-                      _currentIndex.value = index;
-                      _pageController.animateToPage(index,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    } else {
-                      showModalBottomSheet(
-                          isScrollControlled: true,
-                          elevation: 0,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (_) => const ProfileBottomSheet());
-                    }
+                    _currentIndex.value = index;
+                    _pageController.animateToPage(index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease);
                   },
                   items: [
                     BottomNavigationBarItem(
@@ -282,9 +331,10 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                               Positioned.fill(
                                   child: Align(
                                 alignment: Alignment.topRight,
-                                child: BadgeContainer(
-                                    number: cartprovider
-                                        .allCartData!.products!.length),
+                                child: CustomBadgeWidget(
+                                  number: cartprovider
+                                      .allCartData!.products!.length,
+                                ),
                               ))
                           ],
                         ),
@@ -300,7 +350,7 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                               Positioned.fill(
                                   child: Align(
                                 alignment: Alignment.topRight,
-                                child: BadgeContainer(
+                                child: CustomBadgeWidget(
                                     number: cartprovider
                                         .allCartData!.products!.length),
                               ))
@@ -324,40 +374,6 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class BadgeContainer extends StatelessWidget {
-  const BadgeContainer({
-    Key? key,
-    required this.number,
-  }) : super(key: key);
-
-  final int number;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 15,
-      width: 15,
-      decoration: BoxDecoration(
-        shape: number < 99 ? BoxShape.circle : BoxShape.rectangle,
-        borderRadius:
-            number < 99 ? null : BorderRadius.circular(SizeConfig.screenWidth!),
-        color: MediaQuery.of(context).platformBrightness == Brightness.dark
-            ? Colors.green[300]
-            : Colors.green,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        number.toString(),
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 8.5,
-          color: Theme.of(context).colorScheme.background,
         ),
       ),
     );

@@ -127,13 +127,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  carousel_slider:
-    dependency: "direct main"
-    description:
-      name: carousel_slider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.1"
   characters:
     dependency: transitive
     description:
@@ -569,6 +562,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  jiffy:
+    dependency: "direct main"
+    description:
+      name: jiffy
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.0"
   js:
     dependency: transitive
     description:
@@ -758,13 +758,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
-  preload_page_view:
-    dependency: "direct main"
-    description:
-      name: preload_page_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.6"
   process:
     dependency: transitive
     description:

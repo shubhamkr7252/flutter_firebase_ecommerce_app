@@ -70,10 +70,6 @@ cached_network_image_web
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/cached_network_image_web-1.0.1/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/cached_network_image_web-1.0.1/lib/
-carousel_slider
-2.12
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/carousel_slider-4.1.1/
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/carousel_slider-4.1.1/lib/
 characters
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/
@@ -314,6 +310,10 @@ io
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/io-1.0.3/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/io-1.0.3/lib/
+jiffy
+2.12
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/jiffy-5.0.0/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/jiffy-5.0.0/lib/
 js
 2.16
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/
@@ -422,10 +422,6 @@ pool
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pool-1.5.0/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pool-1.5.0/lib/
-preload_page_view
-2.12
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/preload_page_view-0.1.6/
-file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/preload_page_view-0.1.6/lib/
 process
 2.14
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/process-4.2.4/

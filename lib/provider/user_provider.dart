@@ -91,8 +91,7 @@ class UserProvider extends ChangeNotifier {
     UploadUserProfileImageProvider _provider =
         Provider.of(context, listen: false);
     if (_provider.getImageFile != null) {
-      await _provider.uploadImage(context,
-          currentUser: _currentUser!.id.toString());
+      await _provider.uploadImage(context, currentUser: _currentUser!.id!);
     }
 
     if (_isDataChanged) {

@@ -12,6 +12,18 @@ class WishlistProvider extends ChangeNotifier {
   List<ProductListModel> get allWishlistProducts => _allWishlistProducts;
   bool get isDataLoaded => _isDataLoaded;
 
+  Future<void> fetchWishlistData({required String userId}) async {
+    await UserWishlistDatabaseConnection.getUserWishlistData(userId: userId)
+        .then((wishlistData) async {
+      if (wishlistData != null) {
+        _allWishlistProducts = wishlistData.products!;
+      }
+
+      _isDataLoaded = true;
+      notifyListeners();
+    });
+  }
+
   Future<void> modifyList(ProductListModel data,
       {required String userId}) async {
     if (_allWishlistProducts
@@ -52,16 +64,5 @@ class WishlistProvider extends ChangeNotifier {
         userId: userId, products: _allWishlistProducts);
 
     notifyListeners();
-  }
-
-  Future<void> fetchWishlistData({required String userId}) async {
-    await UserWishlistDatabaseConnection.getUserWishlistData(userId: userId)
-        .then((wishlistData) async {
-      if (wishlistData != null) {
-        _allWishlistProducts = wishlistData.products!;
-      }
-      _isDataLoaded = true;
-      notifyListeners();
-    });
   }
 }

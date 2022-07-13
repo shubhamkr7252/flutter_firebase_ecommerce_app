@@ -28,11 +28,13 @@ class LightTheme {
         radius: const Radius.circular(50),
         thickness: MaterialStateProperty.all(5),
       ),
+      cardColor: LightAppColors.cardColor,
       iconTheme: const IconThemeData(color: Colors.black87),
       popupMenuTheme:
           const PopupMenuThemeData(enableFeedback: false, color: Colors.white),
       dividerColor: LightAppColors.dividerColor,
       colorScheme: ColorScheme.fromSwatch().copyWith(
+          inversePrimary: DarkAppColors.background,
           secondary: LightAppColors.secondary,
           primary: LightAppColors.primary,
           background: LightAppColors.background,

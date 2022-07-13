@@ -9,14 +9,15 @@ import '../model/product.dart';
 class CartProvider extends ChangeNotifier {
   CartModel? _cartData;
   bool _isDataLoaded = false;
-  double? _totalCost;
+  double? _totalAmountPaid;
   double _discount = 0;
+  double _totalCost = 0;
 
   UserAddressObject? _defaultCartDeliveryAddress;
 
   Future<void> resetData({required String userId}) async {
     _discount = 0;
-    _totalCost = 0;
+    _totalAmountPaid = 0;
     _cartData!.products!.clear();
 
     notifyListeners();
@@ -28,7 +29,8 @@ class CartProvider extends ChangeNotifier {
 
   CartModel? get allCartData => _cartData;
   bool get isDataLoaded => _isDataLoaded;
-  double? get totalCartCost => _totalCost;
+  double? get totalAmountPaid => _totalAmountPaid;
+  double? get totalCost => _totalCost;
   double? get discount => _discount;
 
   UserAddressObject? get getCartDeliveryAddress => _defaultCartDeliveryAddress;
@@ -58,11 +60,12 @@ class CartProvider extends ChangeNotifier {
     _wishlistProvider.allWishlistProducts.add(productData);
 
     if (productData.salePrice != 0) {
-      _totalCost = _totalCost! - productData.salePrice!;
+      _totalAmountPaid = _totalAmountPaid! - productData.salePrice!;
       _discount -= productData.price! - productData.salePrice!;
     } else {
-      _totalCost = _totalCost! - productData.price!;
+      _totalAmountPaid = _totalAmountPaid! - productData.price!;
     }
+    _totalCost = _totalCost - productData.price!;
 
     await UserCartDatabaseConnection().cartToWishlistAndViceVersa(
         userId: userId,
@@ -77,19 +80,21 @@ class CartProvider extends ChangeNotifier {
     if (_cartData!.products!.contains(product)) {
       _cartData!.products!.remove(product);
       if (product.salePrice != 0) {
-        _totalCost = _totalCost! - product.salePrice!;
+        _totalAmountPaid = _totalAmountPaid! - product.salePrice!;
         _discount -= product.price! - product.salePrice!;
       } else {
-        _totalCost = _totalCost! - product.price!;
+        _totalAmountPaid = _totalAmountPaid! - product.price!;
       }
+      _totalCost = _totalCost - product.price!;
     } else {
       _cartData!.products!.add(product);
       if (product.salePrice != 0) {
-        _totalCost = _totalCost! + product.salePrice!;
+        _totalAmountPaid = _totalAmountPaid! + product.salePrice!;
         _discount += product.price! - product.salePrice!;
       } else {
-        _totalCost = _totalCost! + product.price!;
+        _totalAmountPaid = _totalAmountPaid! + product.price!;
       }
+      _totalCost = _totalCost + product.price!;
     }
 
     List<Map<String, dynamic>> _productMapData = [];
@@ -104,15 +109,17 @@ class CartProvider extends ChangeNotifier {
   }
 
   void getTotalCost() {
+    _totalAmountPaid = 0;
     _totalCost = 0;
     _discount = 0;
     for (var element in _cartData!.products!) {
       if (element.salePrice != 0) {
-        _totalCost = _totalCost! + element.salePrice!;
+        _totalAmountPaid = _totalAmountPaid! + element.salePrice!;
         _discount += element.price! - element.salePrice!;
       } else {
-        _totalCost = _totalCost! + element.price!;
+        _totalAmountPaid = _totalAmountPaid! + element.price!;
       }
+      _totalCost = _totalCost + element.price!;
     }
   }
 

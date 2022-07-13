@@ -24,4 +24,11 @@ class UserDatabaseConnection {
       "lastName": userData.lastName,
     });
   }
+
+  Future<void> setUserProfileImage(
+      {required String userId, required String imageSrc}) async {
+    await FirebaseFirestore.instance.collection("Users").doc(userId).update({
+      "image": imageSrc,
+    });
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/authentication/login_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/authentication%20pages/login_page.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/home%20main%20navigation/home_main_navigation.dart';
 import 'package:flutter_firebase_ecommerce_app/service/hive_boxes.dart';
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
@@ -23,7 +23,7 @@ class AuthService {
       });
     } else {
       Future.delayed(const Duration(seconds: 0)).then((value) {
-        NavigatorService.pushReplaceUntil(context, page: const LoginPage());
+        NavigatorService.pushReplaceUntil(context, page: const LoginScreen());
       });
     }
   }
@@ -31,6 +31,6 @@ class AuthService {
   static Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
 
-    NavigatorService.pushReplaceUntil(context, page: const LoginPage());
+    NavigatorService.pushReplaceUntil(context, page: const LoginScreen());
   }
 }

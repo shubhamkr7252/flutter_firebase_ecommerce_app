@@ -110,12 +110,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "carousel_slider",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/carousel_slider-4.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "characters",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0",
       "packageUri": "lib/",
@@ -494,6 +488,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "jiffy",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/jiffy-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "js",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4",
       "packageUri": "lib/",
@@ -652,12 +652,6 @@
     {
       "name": "pool",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pool-1.5.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "preload_page_view",
-      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/preload_page_view-0.1.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -896,7 +890,7 @@
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-07-10T22:09:46.890147Z",
+  "generated": "2022-07-13T10:28:54.659499Z",
   "generator": "pub",
   "generatorVersion": "2.17.1"
 }

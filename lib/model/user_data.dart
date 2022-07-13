@@ -24,7 +24,7 @@ class UserData {
         email: data["email"] ?? "",
         firstName: data["firstName"] ?? "",
         lastName: data["lastName"] ?? "",
-        image: null);
+        image: data["image"]);
   }
 
   Map<String, dynamic> toJson() {

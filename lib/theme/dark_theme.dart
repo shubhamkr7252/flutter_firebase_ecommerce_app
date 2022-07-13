@@ -36,9 +36,11 @@ class DarkTheme {
         enableFeedback: false,
         color: Colors.black,
       ),
+      cardColor: DarkAppColors.cardColor,
       scaffoldBackgroundColor: DarkAppColors.background,
       dividerColor: DarkAppColors.dividerColor,
       colorScheme: ColorScheme.fromSwatch().copyWith(
+          inversePrimary: Colors.white,
           secondary: DarkAppColors.secondary,
           primary: DarkAppColors.primary,
           background: DarkAppColors.background,
