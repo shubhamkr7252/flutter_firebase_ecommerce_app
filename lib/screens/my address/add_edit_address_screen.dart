@@ -338,6 +338,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                     Navigator.of(context).pop();
                   }
                 },
+                elevation: 0,
                 child: useraddressprovider.isDataUpdating == true
                     ? CustomLoader(
                         color: Theme.of(context).colorScheme.background,
@@ -353,7 +354,6 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
           ),
         ),
       ),
-      fabLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

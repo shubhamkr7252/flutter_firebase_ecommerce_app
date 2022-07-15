@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/notification_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/authentication/splash_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/brands_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/cart_provider.dart';
@@ -30,6 +31,8 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env.local");
   await Hive.initFlutter();
 
+  await OneSignal.shared.setAppId(dotenv.env["ONESIGNAL_APP_ID"]!);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -38,9 +41,14 @@ Future<void> main() async {
   runApp(const Main());
 }
 
-class Main extends StatelessWidget {
+class Main extends StatefulWidget {
   const Main({Key? key}) : super(key: key);
 
+  @override
+  State<Main> createState() => _MainState();
+}
+
+class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

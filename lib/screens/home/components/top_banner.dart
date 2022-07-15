@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ecommerce_app/model/home_cms_banner.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/product%20listing/product_listing_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/home_cms_provider.dart';
@@ -166,7 +168,13 @@ class _BannerCarouselState extends State<BannerCarousel> {
           widget.onPageChanged(index);
         },
         itemBuilder: (context, index) => InkWell(
-          onTap: () {},
+          onTap: () {
+            NavigatorService.push(context,
+                page: ProductListingScreen(
+                    id: widget.bannerData[index].title!,
+                    name: "",
+                    type: widget.bannerData[index].type!));
+          },
           child: CachedNetworkImage(
             imageUrl: widget.bannerData[index].image!,
             fit: BoxFit.cover,

@@ -45,7 +45,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return CustomScaffold(
       title: "Wishlist",
       body: Consumer<UserProvider>(
-        builder: (context, currentUser, _) => Consumer<CartProvider>(
+        builder: (context, userprovider, _) => Consumer<CartProvider>(
           builder: (context, cartprovider, _) => Consumer<WishlistProvider>(
               builder: (context, wishlistprovider, _) {
             if (wishlistprovider.allWishlistProducts.isNotEmpty &&

@@ -159,7 +159,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           onPress: () async {
                             FocusScope.of(context).unfocus();
                             if (FormValidator.validate(key: _formKey)) {
-                              await userprovider.addCustomer(
+                              await userprovider.addNewUser(
                                 context,
                                 password: _passwordController.text.trim(),
                                 userData: UserData.fromJson({

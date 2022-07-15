@@ -16,7 +16,6 @@ import 'package:flutter_firebase_ecommerce_app/provider/search_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/all%20categories/all_categories_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/colors.dart';
-import '../../service/navigator_service.dart';
 import '../../theme/size.dart';
 
 class HomeMainNavigation extends StatefulWidget {
@@ -72,6 +71,11 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
         "title": "Categories"
       },
       {
+        "activeIcon": FlutterRemix.notification_3_fill,
+        "inactiveIcon": FlutterRemix.notification_3_line,
+        "title": "Notifications"
+      },
+      {
         "activeIcon": FlutterRemix.shopping_cart_2_fill,
         "inactiveIcon": FlutterRemix.shopping_cart_2_line,
         "title": "My Cart"
@@ -86,6 +90,7 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
     _screens = [
       const HomeScreen(),
       const AllCategoriesScreen(),
+      NotificationScreen(userId: _userProvider.getCurrentUser!.id!),
       const MyCartScreen(),
       const ProfileScreen(),
     ];
@@ -169,68 +174,54 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                           ),
                         ),
                       ),
-                      Consumer<UserProvider>(
-                        builder: (context, userprovider, _) => Padding(
-                          padding: EdgeInsets.only(
-                              left: SizeConfig.screenWidth! * .03),
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            borderRadius: BorderRadius.circular(
-                                SizeConfig.screenHeight! * .01),
-                            onTap: () {
-                              NavigatorService.push(context,
-                                  page: NotificationScreen(
-                                      userId:
-                                          userprovider.getCurrentUser!.id!));
-                            },
-                            child: Consumer<NotificationProvider>(
-                              builder: (context, notificationprovider, _) =>
-                                  Padding(
-                                padding: EdgeInsets.all(
-                                    SizeConfig.screenWidth! * .015),
-                                child: Stack(
-                                  children: [
-                                    if (notificationprovider.isDataLoaded ==
-                                            true &&
-                                        notificationprovider
-                                            .allNotificationData.isNotEmpty)
-                                      Icon(
-                                        FlutterRemix.notification_3_fill,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                            .withOpacity(0.75),
-                                        size: SizeConfig.screenWidth! * .06,
-                                      ),
-                                    Icon(
-                                      FlutterRemix.notification_3_line,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                      size: SizeConfig.screenWidth! * .06,
-                                    ),
-                                    // if (notificationprovider.isDataLoaded ==
-                                    //         true &&
-                                    //     notificationprovider
-                                    //         .allNotificationData.isNotEmpty)
-                                    //   Positioned.fill(
-                                    //     child: Align(
-                                    //       alignment: Alignment.topRight,
-                                    //       child: CustomBadgeWidget(
-                                    //         bgColor: Theme.of(context)
-                                    //             .colorScheme
-                                    //             .error,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Consumer<UserProvider>(
+                      //   builder: (context, userprovider, _) => Padding(
+                      //     padding: EdgeInsets.only(
+                      //         left: SizeConfig.screenWidth! * .03),
+                      //     child: InkWell(
+                      //       splashColor: Colors.transparent,
+                      //       highlightColor: Colors.transparent,
+                      //       borderRadius: BorderRadius.circular(
+                      //           SizeConfig.screenHeight! * .01),
+                      //       onTap: () {
+                      //         NavigatorService.push(context,
+                      //             page: NotificationScreen(
+                      //                 userId:
+                      //                     userprovider.getCurrentUser!.id!));
+                      //       },
+                      //       child: Consumer<NotificationProvider>(
+                      //         builder: (context, notificationprovider, _) =>
+                      //             Padding(
+                      //           padding: EdgeInsets.all(
+                      //               SizeConfig.screenWidth! * .015),
+                      //           child: Stack(
+                      //             children: [
+                      //               if (notificationprovider.isDataLoaded ==
+                      //                       true &&
+                      //                   notificationprovider
+                      //                       .allNotificationData.isNotEmpty)
+                      //                 Icon(
+                      //                   FlutterRemix.notification_3_fill,
+                      //                   color: Theme.of(context)
+                      //                       .colorScheme
+                      //                       .error
+                      //                       .withOpacity(0.75),
+                      //                   size: SizeConfig.screenWidth! * .06,
+                      //                 ),
+                      //               Icon(
+                      //                 FlutterRemix.notification_3_line,
+                      //                 color: Theme.of(context)
+                      //                     .colorScheme
+                      //                     .background,
+                      //                 size: SizeConfig.screenWidth! * .06,
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   )),
         ),
@@ -246,11 +237,13 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
           ),
           child: ValueListenableBuilder<int>(
             valueListenable: _currentIndex,
-            builder: (context, value, child) => PageView.builder(
-              itemBuilder: (context, index) => _screens[index],
-              itemCount: _screens.length,
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
+            builder: (context, value, child) => AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) => FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+              child: _screens.elementAt(value),
             ),
           ),
         ),
@@ -262,9 +255,8 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context)
-                      .textTheme
-                      .bodyText1!
-                      .color!
+                      .colorScheme
+                      .inversePrimary
                       .withOpacity(0.25),
                   blurRadius: 2.0,
                 ),
@@ -273,103 +265,78 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
             padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.screenHeight! * .015),
             child: Consumer<CartProvider>(
-              builder: (context, cartprovider, _) => Theme(
-                data: Theme.of(context).copyWith(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-                child: BottomNavigationBar(
-                  currentIndex: value,
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  showUnselectedLabels: true,
-                  type: BottomNavigationBarType.fixed,
-                  selectedItemColor:
-                      Theme.of(context).colorScheme.inversePrimary,
-                  selectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 12.5),
-                  unselectedLabelStyle: const TextStyle(fontSize: 12.5),
-                  onTap: (index) {
-                    _currentIndex.value = index;
-                    _pageController.animateToPage(index,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease);
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                        icon: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.5),
-                            child: Icon(_screenBottomNavigationItemData[0]
-                                ["inactiveIcon"])),
-                        activeIcon: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.5),
-                            child: Icon(_screenBottomNavigationItemData[0]
-                                ["activeIcon"])),
-                        tooltip: "",
-                        label: _screenBottomNavigationItemData[0]["title"]),
-                    BottomNavigationBarItem(
-                        icon: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.5),
-                            child: Icon(_screenBottomNavigationItemData[1]
-                                ["inactiveIcon"])),
-                        activeIcon: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.5),
-                            child: Icon(_screenBottomNavigationItemData[1]
-                                ["activeIcon"])),
-                        tooltip: "",
-                        label: _screenBottomNavigationItemData[1]["title"]),
-                    BottomNavigationBarItem(
-                        icon: Stack(
-                          children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5.5),
-                                child: Icon(_screenBottomNavigationItemData[2]
-                                    ["inactiveIcon"])),
-                            if (cartprovider.isDataLoaded == true &&
-                                cartprovider.allCartData!.products!.isNotEmpty)
-                              Positioned.fill(
-                                  child: Align(
-                                alignment: Alignment.topRight,
-                                child: CustomBadgeWidget(
-                                  number: cartprovider
-                                      .allCartData!.products!.length,
-                                ),
-                              ))
-                          ],
-                        ),
-                        activeIcon: Stack(
-                          children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5.5),
-                                child: Icon(_screenBottomNavigationItemData[2]
-                                    ["activeIcon"])),
-                            if (cartprovider.isDataLoaded == true &&
-                                cartprovider.allCartData!.products!.isNotEmpty)
-                              Positioned.fill(
-                                  child: Align(
-                                alignment: Alignment.topRight,
-                                child: CustomBadgeWidget(
-                                    number: cartprovider
-                                        .allCartData!.products!.length),
-                              ))
-                          ],
-                        ),
-                        tooltip: "",
-                        label: _screenBottomNavigationItemData[2]["title"]),
-                    BottomNavigationBarItem(
-                        icon: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.5),
-                            child: Icon(_screenBottomNavigationItemData[3]
-                                ["inactiveIcon"])),
-                        activeIcon: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.5),
-                            child: Icon(_screenBottomNavigationItemData[3]
-                                ["activeIcon"])),
-                        tooltip: "",
-                        label: _screenBottomNavigationItemData[3]["title"]),
-                  ],
+              builder: (context, cartprovider, _) =>
+                  Consumer<NotificationProvider>(
+                builder: (context, notificationprovider, _) => Theme(
+                  data: Theme.of(context).copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                  ),
+                  child: BottomNavigationBar(
+                    currentIndex: value,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    showUnselectedLabels: false,
+                    showSelectedLabels: false,
+                    type: BottomNavigationBarType.fixed,
+                    selectedFontSize: 0,
+                    unselectedFontSize: 0,
+                    selectedItemColor:
+                        Theme.of(context).colorScheme.inversePrimary,
+                    // selectedLabelStyle: const TextStyle(
+                    //     fontWeight: FontWeight.bold, fontSize: 12.5),
+                    // unselectedLabelStyle: const TextStyle(fontSize: 12.5),
+                    onTap: (index) {
+                      _currentIndex.value = index;
+                    },
+                    items: [
+                      ///home tile
+                      cutomBottomNavigationBar(
+                          icon: _screenBottomNavigationItemData[0]
+                              ["inactiveIcon"],
+                          activeIcon: _screenBottomNavigationItemData[0]
+                              ["activeIcon"],
+                          label: _screenBottomNavigationItemData[0]["title"]),
+
+                      ///categories tile
+                      cutomBottomNavigationBar(
+                          icon: _screenBottomNavigationItemData[1]
+                              ["inactiveIcon"],
+                          activeIcon: _screenBottomNavigationItemData[1]
+                              ["activeIcon"],
+                          label: _screenBottomNavigationItemData[1]["title"]),
+
+                      ///notifications tile
+                      cutomBottomNavigationBar(
+                          icon: _screenBottomNavigationItemData[2]
+                              ["inactiveIcon"],
+                          activeIcon: _screenBottomNavigationItemData[2]
+                              ["activeIcon"],
+                          badgeNumber:
+                              notificationprovider.allNotificationData.length,
+                          label: _screenBottomNavigationItemData[2]["title"]),
+
+                      ///cart tile
+                      cutomBottomNavigationBar(
+                          icon: _screenBottomNavigationItemData[3]
+                              ["inactiveIcon"],
+                          activeIcon: _screenBottomNavigationItemData[3]
+                              ["activeIcon"],
+                          badgeNumber: cartprovider.allCartData != null &&
+                                  cartprovider.allCartData!.products!.isNotEmpty
+                              ? cartprovider.allCartData!.products!.length
+                              : null,
+                          label: _screenBottomNavigationItemData[3]["title"]),
+
+                      ///profile tile
+                      cutomBottomNavigationBar(
+                          icon: _screenBottomNavigationItemData[4]
+                              ["inactiveIcon"],
+                          activeIcon: _screenBottomNavigationItemData[4]
+                              ["activeIcon"],
+                          label: _screenBottomNavigationItemData[4]["title"]),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -377,5 +344,40 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
         ),
       ),
     );
+  }
+
+  BottomNavigationBarItem cutomBottomNavigationBar({
+    required IconData icon,
+    required IconData activeIcon,
+    int? badgeNumber,
+    required String label,
+  }) {
+    return BottomNavigationBarItem(
+        icon: Stack(
+          children: [
+            Icon(icon),
+            if (badgeNumber != null && badgeNumber != 0)
+              Positioned.fill(
+                  child: Align(
+                alignment: Alignment.topRight,
+                child: CustomBadgeWidget(
+                  number: badgeNumber,
+                ),
+              ))
+          ],
+        ),
+        activeIcon: Stack(
+          children: [
+            Icon(activeIcon),
+            if (badgeNumber != null && badgeNumber != 0)
+              Positioned.fill(
+                  child: Align(
+                alignment: Alignment.topRight,
+                child: CustomBadgeWidget(number: badgeNumber),
+              ))
+          ],
+        ),
+        tooltip: "",
+        label: label);
   }
 }

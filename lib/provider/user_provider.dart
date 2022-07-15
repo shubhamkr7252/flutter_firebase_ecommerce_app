@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/database/user.dart';
 import 'package:flutter_firebase_ecommerce_app/model/user_data.dart';
@@ -21,55 +22,78 @@ class UserProvider extends ChangeNotifier {
     _currentUser = null;
   }
 
-  Future<void> init({required String userId}) async {
-    _currentUser = await UserDatabaseConnection().fetchUserData(userId: userId);
+  Future<bool> init({required String userId, String? token}) async {
+    _currentUser = await UserDatabaseConnection()
+        .fetchUserData(userId: userId, token: token!);
+
     notifyListeners();
+
+    if (_currentUser != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  void updateUserImageToProvider(String imageSrc) {
-    _currentUser!.image = imageSrc;
-  }
-
+  ///function for logout
   Future<void> userLogout(BuildContext context) async {
-    _isLoading = true;
-    notifyListeners();
-
+    OSDeviceState? _oneSignalStatus = await OneSignal.shared.getDeviceState();
+    await UserDatabaseConnection().removeTokenData(
+        userId: _currentUser!.id!, token: _oneSignalStatus!.userId!);
     await AuthService.logout(context);
+
+    notifyListeners();
   }
 
-  Future<void> addCustomer(BuildContext context,
+  ///function to register
+  Future<void> addNewUser(BuildContext context,
       {required UserData userData, required String password}) async {
-    String userId = await FirebaseAuthService.createUser(
-        email: userData.email!, password: password);
+    Map<String, dynamic>? responseUserData =
+        await FirebaseAuthService.createUser(context,
+            email: userData.email!, password: password);
 
-    UserData newUserData = UserData.fromJson({
-      "id": userId,
-      "firstName": userData.firstName,
-      "lastName": userData.lastName,
-      "email": userData.email,
-    });
+    if (responseUserData != null) {
+      UserData newUserData = UserData.fromJson({
+        "id": responseUserData["uid"],
+        "firstName": userData.firstName,
+        "lastName": userData.lastName,
+        "email": userData.email,
+        "token": [responseUserData["token"]],
+      });
 
-    await UserDatabaseConnection().addNewCustomerData(data: newUserData);
-    _currentUser = newUserData;
+      await UserDatabaseConnection().addNewUserData(data: newUserData);
+      _currentUser = newUserData;
 
-    HiveBoxes.registerAdapters();
+      HiveBoxes.registerAdapters();
 
-    NavigatorService.pushReplaceUntil(context,
-        page: const HomeMainNavigation());
+      NavigatorService.pushReplaceUntil(context,
+          page: const HomeMainNavigation());
+    } else {
+      return;
+    }
   }
 
+  ///function to login
   Future<void> login(BuildContext context,
       {required String email, required String password}) async {
-    String userId =
-        await FirebaseAuthService.login(email: email, password: password);
-    _currentUser = await UserDatabaseConnection().fetchUserData(userId: userId);
+    Map<String, dynamic>? responseUserData = await FirebaseAuthService.login(
+        context,
+        email: email,
+        password: password);
+    if (responseUserData != null) {
+      _currentUser = await UserDatabaseConnection().fetchUserData(
+          userId: responseUserData["uid"], token: responseUserData["token"]);
 
-    HiveBoxes.registerAdapters();
+      HiveBoxes.registerAdapters();
 
-    NavigatorService.pushReplaceUntil(context,
-        page: const HomeMainNavigation());
+      NavigatorService.pushReplaceUntil(context,
+          page: const HomeMainNavigation());
+    } else {
+      return;
+    }
   }
 
+  ///function to update user data
   Future<void> updateUserNameDataAndImage(BuildContext context,
       {required String firstName, required String? lastName}) async {
     _isLoading = true;
@@ -96,7 +120,7 @@ class UserProvider extends ChangeNotifier {
 
     if (_isDataChanged) {
       await UserDatabaseConnection()
-          .updateCustomerNameData(userData: _currentUser!);
+          .updateUserNameData(userData: _currentUser!);
     }
 
     _isLoading = false;

@@ -19,15 +19,15 @@ class MyOrderScreen extends StatefulWidget {
 }
 
 class _MyOrderScreenState extends State<MyOrderScreen> {
-  late OrderProvider _OrderProvider;
+  late OrderProvider _orderProvider;
 
   @override
   void initState() {
-    _OrderProvider = Provider.of(context, listen: false);
+    _orderProvider = Provider.of(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_OrderProvider.isDataLoaded == false) {
-        _OrderProvider.fetchOrdersData(userId: widget.userId);
+      if (_orderProvider.isDataLoaded == false) {
+        _orderProvider.fetchOrdersData(userId: widget.userId);
       }
     });
     super.initState();

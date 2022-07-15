@@ -44,6 +44,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "iconOutline": FlutterRemix.map_pin_2_line,
         "title": "My Addresses",
       },
+      {
+        "icon": FlutterRemix.information_fill,
+        "iconOutline": FlutterRemix.information_line,
+        "title": "About",
+      },
     ];
     super.initState();
   }
@@ -51,180 +56,203 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
-      builder: (context, userprovider, _) => Padding(
-        padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenHeight! * .01),
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenHeight! * .015,
-                    vertical: SizeConfig.screenHeight! * .025),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Row(
-                        children: [
-                          ProfilePic(
-                            size: SizeConfig.screenWidth! * .15,
-                          ),
-                          SizedBox(width: SizeConfig.screenWidth! * .05),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text("Welcome",
-                                    style: TextStyle(
-                                      fontSize: SizeConfig.screenWidth! * .04,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background,
-                                    )),
-                                const SizedBox(height: .05),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth! * .5,
-                                  child: Text(
-                                      userprovider.getCurrentUser != null
-                                          ? userprovider
-                                                  .getCurrentUser!.firstName! +
-                                              (userprovider.getCurrentUser!
-                                                          .lastName !=
-                                                      null
-                                                  ? " " +
-                                                      userprovider
-                                                          .getCurrentUser!
-                                                          .lastName!
-                                                  : "")
-                                          : "User",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
+      builder: (context, userprovider, _) => Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.screenHeight! * .01),
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenHeight! * .015,
+                        vertical: SizeConfig.screenHeight! * .025),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Row(
+                            children: [
+                              ProfilePic(
+                                size: SizeConfig.screenWidth! * .15,
+                              ),
+                              SizedBox(width: SizeConfig.screenWidth! * .05),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text("Welcome",
+                                        style: TextStyle(
+                                          fontSize:
+                                              SizeConfig.screenWidth! * .04,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .background,
-                                          fontSize:
-                                              SizeConfig.screenWidth! * .05)),
+                                        )),
+                                    const SizedBox(height: .05),
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth! * .5,
+                                      child: Text(
+                                          userprovider.getCurrentUser != null
+                                              ? userprovider.getCurrentUser!
+                                                      .firstName! +
+                                                  (userprovider.getCurrentUser!
+                                                              .lastName !=
+                                                          null
+                                                      ? " " +
+                                                          userprovider
+                                                              .getCurrentUser!
+                                                              .lastName!
+                                                      : "")
+                                              : "User",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                              fontSize:
+                                                  SizeConfig.screenWidth! *
+                                                      .05)),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: SizeConfig.screenWidth! * .015),
-                    InkResponse(
-                      onTap: () {
-                        NavigatorService.push(context,
-                            page: const EditProfileScreen());
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme.of(context).colorScheme.background),
-                        padding:
-                            EdgeInsets.all(SizeConfig.screenHeight! * .015),
-                        child: Icon(FlutterRemix.edit_2_fill,
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: SizeConfig.screenHeight! * .015),
-            Column(
-                children: List.generate(_profileItems.length, (index) {
-              return Padding(
-                padding: index == 0 || index == _profileItems.length
-                    ? EdgeInsets.zero
-                    : EdgeInsets.only(top: SizeConfig.screenHeight! * .015),
-                child: ProfileOptionsTile(
-                  icon: _profileItems[index]["icon"],
-                  title: _profileItems[index]["title"],
-                  iconOutline: _profileItems[index]["iconOutline"],
-                  onTap: () {
-                    if (index == 0) {
-                      NavigatorService.push(context,
-                          page: MyOrderScreen(
-                              userId: userprovider.getCurrentUser!.id!));
-                    }
-                    if (index == 1) {
-                      NavigatorService.push(context,
-                          page: WishlistScreen(
-                              userId: userprovider.getCurrentUser!.id!));
-                    }
-                    if (index == 2) {
-                      NavigatorService.push(context,
-                          page: MyAddressScreen(
-                            userId: userprovider.getCurrentUser!.id!,
-                          ));
-                    }
-                  },
-                ),
-              );
-            })),
-            SizedBox(height: SizeConfig.screenHeight! * .015),
-            Consumer<UploadUserProfileImageProvider>(
-              builder: (context, uploaduserprofileimageprovider, _) =>
-                  CustomButtonA(
-                      buttonText: userprovider.getCurrentUser != null
-                          ? "Logout"
-                          : "Login",
-                      onPress: () {
-                        if (userprovider.getCurrentUser != null) {
-                          showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (_) => CustomConfirmationBottomSheet(
-                                    title: "Logout",
-                                    description:
-                                        "Logging out will clear all your data from this device and you will be redirected to login screen.",
-                                    positiveButtonOnTap: () async {
-                                      await userprovider.userLogout(context);
-                                    },
-                                    positiveButtonText: 'Logout',
-                                  ));
-                        } else {
-                          NavigatorService.push(context,
-                              page: const LoginScreen());
-                        }
-                      }),
-            ),
-            SizedBox(height: SizeConfig.screenHeight! * .015),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        showLicensePage(
-                            context: context,
-                            applicationName: "Flutter Firebase Ecommerce App",
-                            applicationVersion: "1.0",
-                            applicationLegalese: "Copyright Here",
-                            applicationIcon: Padding(
-                              padding: EdgeInsets.all(
-                                  SizeConfig.screenHeight! * .015),
-                              child: Image.asset(
-                                "assets/logo.png",
-                                width: SizeConfig.screenWidth! * .1,
                               ),
-                            ));
-                      },
-                      child: const Text("About"))
-                ],
-              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.screenWidth! * .015),
+                        InkResponse(
+                          onTap: () {
+                            NavigatorService.push(context,
+                                page: const EditProfileScreen());
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    Theme.of(context).colorScheme.background),
+                            padding:
+                                EdgeInsets.all(SizeConfig.screenHeight! * .015),
+                            child: Icon(FlutterRemix.edit_2_fill,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: SizeConfig.screenHeight! * .015),
+                Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(_profileItems.length, (index) {
+                      return Padding(
+                        padding: index == 0 || index == _profileItems.length
+                            ? EdgeInsets.zero
+                            : EdgeInsets.only(
+                                top: SizeConfig.screenHeight! * .015),
+                        child: ProfileOptionsTile(
+                          icon: _profileItems[index]["icon"],
+                          title: _profileItems[index]["title"],
+                          iconOutline: _profileItems[index]["iconOutline"],
+                          onTap: () {
+                            if (index == 0) {
+                              NavigatorService.push(context,
+                                  page: MyOrderScreen(
+                                      userId:
+                                          userprovider.getCurrentUser!.id!));
+                            }
+                            if (index == 1) {
+                              NavigatorService.push(context,
+                                  page: WishlistScreen(
+                                      userId:
+                                          userprovider.getCurrentUser!.id!));
+                            }
+                            if (index == 2) {
+                              NavigatorService.push(context,
+                                  page: MyAddressScreen(
+                                    userId: userprovider.getCurrentUser!.id!,
+                                  ));
+                            }
+                            if (index == 3) {
+                              showLicensePage(
+                                  context: context,
+                                  applicationName:
+                                      "Flutter Firebase Ecommerce App",
+                                  applicationVersion: "1.0",
+                                  applicationLegalese: "Copyright Here",
+                                  applicationIcon: Padding(
+                                    padding: EdgeInsets.all(
+                                        SizeConfig.screenHeight! * .015),
+                                    child: Image.asset(
+                                      "assets/logo.png",
+                                      width: SizeConfig.screenWidth! * .1,
+                                    ),
+                                  ));
+                            }
+                          },
+                        ),
+                      );
+                    })),
+                SizedBox(height: SizeConfig.screenHeight! * .015),
+                Consumer<UploadUserProfileImageProvider>(
+                  builder: (context, uploaduserprofileimageprovider, _) =>
+                      CustomButtonA(
+                          buttonText: userprovider.getCurrentUser != null
+                              ? "Logout"
+                              : "Login",
+                          onPress: () {
+                            if (userprovider.getCurrentUser != null) {
+                              showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (_) => CustomConfirmationBottomSheet(
+                                        title: "Logout",
+                                        description:
+                                            "Logging out will clear all your data from this device and you will be redirected to login screen.",
+                                        positiveButtonOnTap: () async {
+                                          await userprovider
+                                              .userLogout(context);
+                                        },
+                                        positiveButtonText: 'Logout',
+                                      ));
+                            } else {
+                              NavigatorService.push(context,
+                                  page: const LoginScreen());
+                            }
+                          }),
+                ),
+                // SizedBox(height: SizeConfig.screenHeight! * .015),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: TextButton(
+                //       onPressed: () {
+                // showLicensePage(
+                //     context: context,
+                //     applicationName: "Flutter Firebase Ecommerce App",
+                //     applicationVersion: "1.0",
+                //     applicationLegalese: "Copyright Here",
+                //     applicationIcon: Padding(
+                //       padding: EdgeInsets.all(
+                //           SizeConfig.screenHeight! * .015),
+                //       child: Image.asset(
+                //         "assets/logo.png",
+                //         width: SizeConfig.screenWidth! * .1,
+                //       ),
+                //     ));
+                //       },
+                //       child: const Text("About")),
+                // ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -20,11 +20,9 @@ class CartProvider extends ChangeNotifier {
     _totalAmountPaid = 0;
     _cartData!.products!.clear();
 
-    notifyListeners();
-
-    await Future.delayed(const Duration(seconds: 1));
-
     await UserCartDatabaseConnection().clearCartData(userId: userId);
+
+    notifyListeners();
   }
 
   CartModel? get allCartData => _cartData;

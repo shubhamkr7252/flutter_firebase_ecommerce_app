@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_firebase_ecommerce_app/database/notification.dart';
+import 'package:flutter_firebase_ecommerce_app/database/user.dart';
 import 'package:flutter_firebase_ecommerce_app/model/notification.dart';
 import 'package:flutter_firebase_ecommerce_app/model/order.dart';
 import 'package:flutter_firebase_ecommerce_app/model/product.dart';
+import 'package:flutter_firebase_ecommerce_app/service/onesignal_notification_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
   List<NotificationModel> _allNotificationData = [];
@@ -66,6 +68,15 @@ class NotificationProvider extends ChangeNotifier {
     await NotificationDatabaseConnection().updateNotificationData(
         userId: userId, notificationData: _allNotificationData);
 
+    List<String> _tokensData =
+        await UserDatabaseConnection().fetchUserTokenData(userId: userId);
+
+    await OnesignalNotificationService().sendNotification(
+      title: _newNotification.title!,
+      content: _newNotification.description!,
+      tokenIds: _tokensData,
+    );
+
     notifyListeners();
   }
 
@@ -85,6 +96,15 @@ class NotificationProvider extends ChangeNotifier {
 
     await NotificationDatabaseConnection().updateNotificationData(
         userId: userId, notificationData: _allNotificationData);
+
+    List<String> _tokensData =
+        await UserDatabaseConnection().fetchUserTokenData(userId: userId);
+
+    await OnesignalNotificationService().sendNotification(
+      title: _newNotification.title!,
+      content: _newNotification.description!,
+      tokenIds: _tokensData,
+    );
 
     notifyListeners();
   }

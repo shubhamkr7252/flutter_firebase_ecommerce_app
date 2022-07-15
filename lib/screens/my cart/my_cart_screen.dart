@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/place_order_sceen.dart';
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
+import 'package:flutter_firebase_ecommerce_app/widgets/custom_snackbar.dart';
+import 'package:flutter_firebase_ecommerce_app/widgets/empty_data_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/model/product.dart';
@@ -10,7 +13,6 @@ import 'package:flutter_firebase_ecommerce_app/provider/wishlist_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/components/cart_bottom_price_container.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/components/cart_top_address_widget.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/components/money_saved_tile.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/place_order_sceen.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom%20loader/custom_loader.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_scaffold.dart';
@@ -68,29 +70,20 @@ class _MyCartScreenState extends State<MyCartScreen> {
                       wishlistprovider.isDataLoaded == true &&
                       useraddressprovider.isDataLoaded == true) {
                     return Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Expanded(
                           child: SingleChildScrollView(
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 SizedBox(
                                     height: SizeConfig.screenHeight! * .015),
-                                Consumer<UserAddressesProvider>(
-                                    builder: (context, useraddressprovider, _) {
-                                  if (useraddressprovider.isDataLoaded ==
-                                          true &&
-                                      useraddressprovider
-                                              .getDefaultAddressData !=
-                                          null) {
-                                    return Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                SizeConfig.screenHeight! *
-                                                    .015),
-                                        child: const CartTopAddressWidget());
-                                  }
-                                  return const SizedBox();
-                                }),
+                                Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.screenHeight! * .015),
+                                    child: const CartTopAddressWidget()),
                                 if (cartprovider.discount != 0)
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -139,6 +132,11 @@ class _MyCartScreenState extends State<MyCartScreen> {
                           CartBottomPriceContainer(
                             toalAmountPaid: cartprovider.totalAmountPaid!,
                             buttonOnTap: () async {
+                              if (cartprovider.getCartDeliveryAddress == null) {
+                                return CustomSnackbar.showSnackbar(context,
+                                    content:
+                                        "Please add an address to continue.");
+                              }
                               NavigatorService.push(context,
                                   page: PlaceOrderScreen(
                                     cartData: cartprovider.allCartData!,
@@ -159,45 +157,10 @@ class _MyCartScreenState extends State<MyCartScreen> {
                       cartprovider.allCartData!.products!.isEmpty &&
                       wishlistprovider.isDataLoaded == true &&
                       wishlistprovider.isDataLoaded == true) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("assets/empty_cart.png",
-                              width: SizeConfig.screenWidth! * .4,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary
-                                  .withAlpha(150)),
-                          SizedBox(height: SizeConfig.screenWidth! * .02),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.screenWidth! * .1),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Cart is Empty",
-                                  style: TextStyle(
-                                      letterSpacing: 2,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: SizeConfig.screenWidth! * .045),
-                                ),
-                                SizedBox(height: SizeConfig.screenWidth! * .01),
-                                Opacity(
-                                  opacity: 0.75,
-                                  child: Text(
-                                    "Product(s) added in Cart will appear here.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize:
-                                            SizeConfig.screenWidth! * .036),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    return const EmptyDataWidget(
+                      assetImage: "assets/empty_cart.png",
+                      title: "Cart is Empty",
+                      subTitle: "Product(s) added in Cart will appear here.",
                     );
                   }
                   return Center(

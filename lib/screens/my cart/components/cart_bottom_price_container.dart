@@ -23,9 +23,8 @@ class CartBottomPriceContainer extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Theme.of(context)
-                  .textTheme
-                  .bodyText1!
-                  .color!
+                  .colorScheme
+                  .inversePrimary
                   .withOpacity(0.25),
               blurRadius: 2.0,
             ),

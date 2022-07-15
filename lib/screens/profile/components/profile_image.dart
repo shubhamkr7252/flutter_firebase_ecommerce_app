@@ -16,6 +16,7 @@ class ProfilePic extends StatelessWidget {
         height: size ?? SizeConfig.screenWidth! * .35,
         width: size ?? SizeConfig.screenWidth! * .35,
         decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
           shape: BoxShape.circle,
           image: DecorationImage(
               image: userprovider.getCurrentUser != null

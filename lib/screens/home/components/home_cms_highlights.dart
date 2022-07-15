@@ -8,6 +8,7 @@ import 'package:flutter_firebase_ecommerce_app/utils/cart_color.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_bottom_sheet_drag_handle.dart';
 import '../../../../utils/discount_calculator.dart';
 import '../../../service/navigator_service.dart';
+import '../../../widgets/custom loader/custom_loader.dart';
 import '../../product description/product_description_screen.dart';
 
 class HomeCMSHighlightsComponent extends StatelessWidget {
@@ -101,11 +102,21 @@ class HomeScreenProductTile extends StatelessWidget {
               height: SizeConfig.screenWidth! * .4,
               width: SizeConfig.screenWidth! * .4,
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.screenHeight! * .01),
-                  image: DecorationImage(
-                      image: CachedNetworkImageProvider(data.images![0]))),
+                color: Colors.white,
+                borderRadius:
+                    BorderRadius.circular(SizeConfig.screenHeight! * .01),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
+                child: CachedNetworkImage(
+                  imageUrl: data.images!.first,
+                  fit: BoxFit.contain,
+                  placeholder: (context, placeholderImage) => CustomLoader(
+                    color: Theme.of(context).colorScheme.primary,
+                    size: SizeConfig.screenWidth! * .15,
+                  ),
+                ),
+              ),
             ),
           ),
           Container(

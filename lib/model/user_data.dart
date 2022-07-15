@@ -9,32 +9,38 @@ class UserData {
 
   String? image;
 
-  UserData(
-      {required this.id,
-      required this.email,
-      required this.firstName,
-      required this.lastName,
-      required this.image});
+  List<String>? tokens;
+
+  UserData({
+    this.id,
+    this.email,
+    this.firstName,
+    this.lastName,
+    this.image,
+    this.tokens,
+  });
 
   factory UserData.fromJson(var obj) {
     Map<String, dynamic> data = Map<String, dynamic>.from(obj);
 
     return UserData(
-        id: data["id"] ?? "",
-        email: data["email"] ?? "",
-        firstName: data["firstName"] ?? "",
-        lastName: data["lastName"] ?? "",
-        image: data["image"]);
+      id: data["id"] ?? "",
+      email: data["email"] ?? "",
+      firstName: data["firstName"] ?? "",
+      lastName: data["lastName"] ?? "",
+      image: data["image"] == null || data["image"].toString().isEmpty
+          ? "https://www.wallpaperup.com/template/dist/images/default/avatar.png?v=3.5.1"
+          : data["image"],
+      tokens: List.from(data["tokens"]),
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data["id"] = id;
-    data["email"] = email;
-    data["image"] = image;
-    data["firstName"] = firstName;
-    data["lastName"] = lastName;
-
-    return data;
-  }
+  toJson() => {
+        "id": id,
+        "email": email,
+        "image": image,
+        "firstName": firstName,
+        "lastName": lastName,
+        "tokens": tokens,
+      };
 }

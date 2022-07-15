@@ -67,7 +67,7 @@ class UploadUserProfileImageProvider extends ChangeNotifier {
         .setUserProfileImage(userId: currentUser, imageSrc: downloadUrl);
 
     UserProvider _provider = Provider.of(context, listen: false);
-    _provider.updateUserImageToProvider(downloadUrl);
+    _provider.getCurrentUser!.image = downloadUrl;
 
     _isLoading = false;
     notifyListeners();

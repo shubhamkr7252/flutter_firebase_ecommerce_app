@@ -32,6 +32,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
     _isUserScrolling = ValueNotifier<bool>(false);
 
     _scrollController = ScrollController();
+
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -136,10 +137,10 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
               color: Theme.of(context).colorScheme.background,
               size: SizeConfig.screenWidth! * .06,
             ),
+            elevation: 0,
           ),
         ),
       ),
-      fabLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

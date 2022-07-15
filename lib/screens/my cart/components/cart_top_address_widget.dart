@@ -44,14 +44,19 @@ class CartTopAddressWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Deliver to: ${cartprovider.getCartDeliveryAddress!.pinCode}",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.screenWidth! * .04,
-                          fontFamily: "Poppins"),
-                    ),
-                    if (hideButton == false)
+                    if (cartprovider.getCartDeliveryAddress != null) ...[
+                      Text(
+                        "Deliver to: ${cartprovider.getCartDeliveryAddress!.pinCode}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.screenWidth! * .04,
+                            fontFamily: "Poppins"),
+                      ),
+                    ] else ...[
+                      const Text("No address added")
+                    ],
+                    if (hideButton == false &&
+                        cartprovider.getCartDeliveryAddress != null)
                       Text.rich(
                         TextSpan(
                           style: TextStyle(
@@ -106,7 +111,8 @@ class CartTopAddressWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                    if (hideButton == true)
+                    if (hideButton == true &&
+                        cartprovider.getCartDeliveryAddress != null)
                       SizedBox(
                         width: SizeConfig.screenWidth! / 1.275,
                         child: Text(
@@ -125,7 +131,7 @@ class CartTopAddressWidget extends StatelessWidget {
                             fontFamily: "Poppins",
                           ),
                         ),
-                      )
+                      ),
                   ],
                 ),
               ],
@@ -136,18 +142,25 @@ class CartTopAddressWidget extends StatelessWidget {
               Flexible(
                 child: CustomButtonA(
                   width: SizeConfig.screenWidth! * .25,
-                  buttonText: "Change",
+                  buttonText: cartprovider.getCartDeliveryAddress == null
+                      ? "Add"
+                      : "Change",
                   onPress: () async {
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      isScrollControlled: true,
-                      builder: (context) => CartAddressSelectionBottomSheet(
-                        defaultCartAddressId:
-                            cartprovider.getCartDeliveryAddress!.addressId!,
-                      ),
-                    );
+                    if (cartprovider.getCartDeliveryAddress == null) {
+                      NavigatorService.push(context,
+                          page: const AddEditAddressScreen(index: 1));
+                    } else {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        isScrollControlled: true,
+                        builder: (context) => CartAddressSelectionBottomSheet(
+                          defaultCartAddressId:
+                              cartprovider.getCartDeliveryAddress!.addressId!,
+                        ),
+                      );
+                    }
                   },
                 ),
               )
