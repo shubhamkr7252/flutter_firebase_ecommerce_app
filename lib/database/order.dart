@@ -1,32 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_ecommerce_app/model/order.dart';
-import 'package:flutter_firebase_ecommerce_app/model/product.dart';
-import 'package:flutter_firebase_ecommerce_app/model/user_address.dart';
 import 'package:flutter_firebase_ecommerce_app/service/firestore_collections.dart';
 
-class OrderDatabaseConnection {
-  Future<void> addNewOrder({
-    required String userId,
-    required RazorpayResponseModel razorpayResponseData,
-    required String orderId,
-    required List<ProductListModel> products,
-    required double totalAmount,
-    required UserAddressObject address,
-  }) async {
-    List<Map<String, dynamic>> _productsMapList = [];
-    for (var element in products) {
-      _productsMapList.add(element.toJson());
+class UserOrderDatabaseConnection {
+  Future<List<UserOrderModel>> fetchUserOrdersData(
+      {required String userId}) async {
+    List<UserOrderModel> _list = [];
+
+    QuerySnapshot querySnapshot = await FirestoreCollection.userOrdersCollection
+        .where("uid", isEqualTo: userId)
+        .get();
+
+    if (querySnapshot.size != 0) {
+      for (var element in querySnapshot.docs) {
+        _list.add(UserOrderModel.fromJson(element.data()));
+      }
     }
 
-    Map<String, dynamic> _addressDataWithoutId = address.toJson();
-    _addressDataWithoutId.removeWhere((key, value) => key == "addressId");
+    return _list;
+  }
 
-    await FirestoreCollection.userOrdersCollection.doc(orderId).set({
-      "products": _productsMapList,
-      "totalAmount": totalAmount,
-      "orderId": orderId,
-      "paymentInformation": razorpayResponseData.toJson(),
-      "address": _addressDataWithoutId,
-      "uid": userId,
+  Future<void> addNewOrder({
+    required Map<String, dynamic> orderData,
+    required String orderId,
+  }) async {
+    await FirestoreCollection.userOrdersCollection.doc(orderId).set(orderData);
+  }
+
+  Future<void> cancelOrder(
+      {required String orderId,
+      required List<UserOrderProductObject> orderProductDataList}) async {
+    List<Map<String, dynamic>> getOrderProductsData(
+        List<UserOrderProductObject> orderProductDataList) {
+      List<Map<String, dynamic>> _list = [];
+      for (var element in orderProductDataList) {
+        _list.add(element.toJson());
+      }
+
+      return _list;
+    }
+
+    await FirestoreCollection.userOrdersCollection.doc(orderId).update({
+      "productsOrderInformation": getOrderProductsData(orderProductDataList),
     });
   }
 }

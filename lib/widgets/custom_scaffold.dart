@@ -88,7 +88,8 @@ class _CustomScaffoldState extends State<CustomScaffold> {
               : widget.customAppBar,
           body: widget.body,
           floatingActionButton: widget.fab,
-          floatingActionButtonLocation: widget.fabLocation,
+          floatingActionButtonLocation:
+              widget.fabLocation ?? FloatingActionButtonLocation.endFloat,
         ),
       ),
     );

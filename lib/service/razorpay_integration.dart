@@ -9,7 +9,7 @@ import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RazorpayIntegration {
-  var auth = 'Basic ' +
+  String auth = 'Basic ' +
       base64Encode(utf8.encode(
           '${dotenv.env['RAZORPAY_API_ID']}:${dotenv.env['RAZORPAY_API_SECRET']}'));
   Future<OrderIdResponseModel?> getOrderId(

@@ -13,6 +13,8 @@ class FirestoreCollection {
       FirebaseFirestore.instance.collection("UserAddress");
   static CollectionReference userOrdersCollection =
       FirebaseFirestore.instance.collection("UserOrders");
+  static CollectionReference userNotificationCollection =
+      FirebaseFirestore.instance.collection("UserNotification");
   static CollectionReference productsCollection =
       FirebaseFirestore.instance.collection("Products");
   static CollectionReference categoriesCollection =

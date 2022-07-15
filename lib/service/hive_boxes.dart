@@ -8,8 +8,12 @@ class HiveBoxes {
   static Box<SearchQueryModel> previousSearchTextListBox() =>
       Hive.box<SearchQueryModel>("previousSearchTextListBox");
 
-  static registerAdapters() {
-    Hive.registerAdapter<ProductListModel>(ProductListModelAdapter());
-    Hive.registerAdapter<SearchQueryModel>(SearchQueryModelAdapter());
+  static void registerAdapters() {
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter<ProductListModel>(ProductListModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter<SearchQueryModel>(SearchQueryModelAdapter());
+    }
   }
 }

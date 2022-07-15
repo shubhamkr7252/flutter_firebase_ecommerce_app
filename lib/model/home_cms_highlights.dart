@@ -29,3 +29,24 @@ class HomeCMSHighlightsModel {
     );
   }
 }
+
+class HomeCMSHighlightsBlueprintModel {
+  String? name, id;
+  List<String>? products;
+
+  HomeCMSHighlightsBlueprintModel({
+    this.name,
+    this.id,
+    this.products,
+  });
+
+  factory HomeCMSHighlightsBlueprintModel.fromJson(var obj) {
+    Map<String, dynamic> data = Map<String, dynamic>.from(obj);
+
+    return HomeCMSHighlightsBlueprintModel(
+      name: data["name"],
+      id: data["id"],
+      products: List.from(data["products"]),
+    );
+  }
+}

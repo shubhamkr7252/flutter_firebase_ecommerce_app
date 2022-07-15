@@ -3,30 +3,34 @@ import 'package:flutter_firebase_ecommerce_app/model/home_cms_highlights.dart';
 import '../service/firestore_collections.dart';
 
 class HomeCMSHighlightsDatabaseConnection {
-  Future<List<HomeCMSHighlightsModel>> getHomeHighlightsData() async {
+  Future<List<HomeCMSHighlightsBlueprintModel>> getHomeHighlightsData() async {
     DocumentSnapshot _doc =
         await FirestoreCollection.cmsCollection.doc("Home").get();
 
-    List<HomeCMSHighlightsModel> docJson = [];
+    List<HomeCMSHighlightsBlueprintModel> docJson = [];
 
-    for (var firstElement in _doc.get("highlights")) {
-      List<dynamic> _docSnaps = [];
-      for (var secondElement in firstElement["products"]) {
-        var data = await FirestoreCollection.productsCollection
-            .doc(secondElement)
-            .get();
-        _docSnaps.add(data.data());
-      }
-
-      HomeCMSHighlightsModel _highlightsData = HomeCMSHighlightsModel.fromJson({
-        "products": _docSnaps,
-        "name": firstElement["name"],
-        "id": firstElement["id"],
-      });
-
-      docJson.add(_highlightsData);
+    for (var element in _doc.get("highlights")) {
+      docJson.add(HomeCMSHighlightsBlueprintModel.fromJson(element));
     }
 
     return docJson;
+  }
+
+  Future<HomeCMSHighlightsModel> getHightlightsAllData(
+      {required HomeCMSHighlightsBlueprintModel data}) async {
+    List<dynamic> _docSnaps = [];
+    for (var element in data.products!) {
+      var data =
+          await FirestoreCollection.productsCollection.doc(element).get();
+      _docSnaps.add(data.data());
+    }
+
+    HomeCMSHighlightsModel _highlightsData = HomeCMSHighlightsModel.fromJson({
+      "products": _docSnaps,
+      "name": data.name!,
+      "id": data.id!,
+    });
+
+    return _highlightsData;
   }
 }

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_firebase_ecommerce_app/database/user.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_firebase_ecommerce_app/database/user_profile_image.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
 
 class UploadUserProfileImageProvider extends ChangeNotifier {
@@ -63,11 +63,11 @@ class UploadUserProfileImageProvider extends ChangeNotifier {
     String downloadUrl = await storageSnap.ref.getDownloadURL();
 
     ///sets the image url for the current user in database
-    await UserProfileImageDatabaseConnection()
+    await UserDatabaseConnection()
         .setUserProfileImage(userId: currentUser, imageSrc: downloadUrl);
 
     UserProvider _provider = Provider.of(context, listen: false);
-    _provider.updateUserImageToProvider(downloadUrl);
+    _provider.getCurrentUser!.image = downloadUrl;
 
     _isLoading = false;
     notifyListeners();
