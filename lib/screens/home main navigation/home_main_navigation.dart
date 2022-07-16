@@ -7,6 +7,7 @@ import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/my_cart_screen.
 import 'package:flutter_firebase_ecommerce_app/screens/notification/notification_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/profile/profile_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/search/search_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/home%20main%20navigation/voice_search_bottom_sheet.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_badge_widget.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:provider/provider.dart';
@@ -71,8 +72,8 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
         "title": "Categories"
       },
       {
-        "activeIcon": FlutterRemix.notification_3_fill,
-        "inactiveIcon": FlutterRemix.notification_3_line,
+        "activeIcon": FlutterRemix.notification_4_fill,
+        "inactiveIcon": FlutterRemix.notification_4_line,
         "title": "Notifications"
       },
       {
@@ -174,54 +175,26 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                           ),
                         ),
                       ),
-                      // Consumer<UserProvider>(
-                      //   builder: (context, userprovider, _) => Padding(
-                      //     padding: EdgeInsets.only(
-                      //         left: SizeConfig.screenWidth! * .03),
-                      //     child: InkWell(
-                      //       splashColor: Colors.transparent,
-                      //       highlightColor: Colors.transparent,
-                      //       borderRadius: BorderRadius.circular(
-                      //           SizeConfig.screenHeight! * .01),
-                      //       onTap: () {
-                      //         NavigatorService.push(context,
-                      //             page: NotificationScreen(
-                      //                 userId:
-                      //                     userprovider.getCurrentUser!.id!));
-                      //       },
-                      //       child: Consumer<NotificationProvider>(
-                      //         builder: (context, notificationprovider, _) =>
-                      //             Padding(
-                      //           padding: EdgeInsets.all(
-                      //               SizeConfig.screenWidth! * .015),
-                      //           child: Stack(
-                      //             children: [
-                      //               if (notificationprovider.isDataLoaded ==
-                      //                       true &&
-                      //                   notificationprovider
-                      //                       .allNotificationData.isNotEmpty)
-                      //                 Icon(
-                      //                   FlutterRemix.notification_3_fill,
-                      //                   color: Theme.of(context)
-                      //                       .colorScheme
-                      //                       .error
-                      //                       .withOpacity(0.75),
-                      //                   size: SizeConfig.screenWidth! * .06,
-                      //                 ),
-                      //               Icon(
-                      //                 FlutterRemix.notification_3_line,
-                      //                 color: Theme.of(context)
-                      //                     .colorScheme
-                      //                     .background,
-                      //                 size: SizeConfig.screenWidth! * .06,
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+                      Theme(
+                        data: Theme.of(context).copyWith(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                        ),
+                        child: IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  builder: (context) =>
+                                      const VoiceSearchBottomSheet());
+                            },
+                            icon: Icon(
+                              FlutterRemix.mic_2_fill,
+                              size: SizeConfig.screenWidth! * .06,
+                              color: Theme.of(context).colorScheme.background,
+                            )),
+                      ),
                     ],
                   )),
         ),
