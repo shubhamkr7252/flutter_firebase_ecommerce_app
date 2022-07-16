@@ -20,6 +20,7 @@ class CustomSnackbar {
           title: title,
           description: description,
         ),
+        animationCurve: Curves.fastOutSlowIn,
         duration: duration ?? const Duration(seconds: 2),
         position: position ?? ToastPosition.bottom);
   }
@@ -64,6 +65,15 @@ class CustomSnackbarWidget extends StatelessWidget {
     return Container(
       width: SizeConfig.screenWidth! * .9,
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(mainContext)
+                .colorScheme
+                .inversePrimary
+                .withOpacity(0.25),
+            blurRadius: 2.0,
+          ),
+        ],
         color: Theme.of(mainContext).cardTheme.color,
         borderRadius: BorderRadius.circular(SizeConfig.screenHeight! * .01),
       ),

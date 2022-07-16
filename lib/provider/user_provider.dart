@@ -22,9 +22,9 @@ class UserProvider extends ChangeNotifier {
     _currentUser = null;
   }
 
-  Future<bool> init({required String userId, String? token}) async {
+  Future<bool> init({required String userId, required String token}) async {
     _currentUser = await UserDatabaseConnection()
-        .fetchUserData(userId: userId, token: token!);
+        .fetchUserData(userId: userId, token: token);
 
     notifyListeners();
 

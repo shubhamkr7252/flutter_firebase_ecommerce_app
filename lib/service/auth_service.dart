@@ -14,10 +14,11 @@ class AuthService {
 
     if (currentUser != null) {
       OSDeviceState? _oneSignalStatus = await OneSignal.shared.getDeviceState();
+      await Future.delayed(const Duration(seconds: 2));
 
       UserProvider _provider = Provider.of(context, listen: false);
       bool _isUserInDatabase = await _provider.init(
-          userId: currentUser.uid, token: _oneSignalStatus!.userId);
+          userId: currentUser.uid, token: _oneSignalStatus!.userId!);
 
       if (_isUserInDatabase) {
         HiveBoxes.registerAdapters();
