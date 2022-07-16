@@ -189,6 +189,7 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                               if (status.isDenied) {
                                 CustomSnackbar.showSnackbar(context,
                                     title: "Microphone permission denied",
+                                    type: 2,
                                     description:
                                         "Please enable microphone permission to use voice search");
                               } else {

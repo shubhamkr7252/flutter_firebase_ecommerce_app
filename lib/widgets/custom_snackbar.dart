@@ -57,7 +57,7 @@ class CustomSnackbarWidget extends StatelessWidget {
             ? CartColor.getColor(mainContext)
             : Theme.of(mainContext).colorScheme.primary));
     final IconData _icon = (type == 2
-        ? FlutterRemix.error_warning_fill
+        ? FlutterRemix.close_circle_fill
         : (type == 1
             ? FlutterRemix.checkbox_circle_fill
             : FlutterRemix.information_fill));
