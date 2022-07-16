@@ -1,15 +1,16 @@
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/notification_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/home%20main%20navigation/voice_search_bottom_sheet.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/home/home_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/my_cart_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/notification/notification_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/profile/profile_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/search/search_screen.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/home%20main%20navigation/voice_search_bottom_sheet.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_badge_widget.dart';
+import 'package:flutter_firebase_ecommerce_app/widgets/custom_snackbar.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/cart_provider.dart';
@@ -181,13 +182,23 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                           highlightColor: Colors.transparent,
                         ),
                         child: IconButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  isScrollControlled: true,
-                                  builder: (context) =>
-                                      const VoiceSearchBottomSheet());
+                            onPressed: () async {
+                              await Permission.microphone.request();
+                              PermissionStatus status =
+                                  await Permission.microphone.status;
+                              if (status.isDenied) {
+                                CustomSnackbar.showSnackbar(context,
+                                    title: "Microphone permission denied",
+                                    description:
+                                        "Please enable microphone permission to use voice search");
+                              } else {
+                                showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                    builder: (context) =>
+                                        const VoiceSearchBottomSheet());
+                              }
                             },
                             icon: Icon(
                               FlutterRemix.mic_2_fill,
@@ -198,26 +209,15 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                     ],
                   )),
         ),
-        body: DoubleBackToCloseApp(
-          snackBar: SnackBar(
-            behavior: SnackBarBehavior.floating,
-            elevation: 0,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            content: const Text(
-              'Tap back again to leave',
-              style: TextStyle(fontWeight: FontWeight.w700),
+        body: ValueListenableBuilder<int>(
+          valueListenable: _currentIndex,
+          builder: (context, value, child) => AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: child,
             ),
-          ),
-          child: ValueListenableBuilder<int>(
-            valueListenable: _currentIndex,
-            builder: (context, value, child) => AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              transitionBuilder: (child, animation) => FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
-              child: _screens.elementAt(value),
-            ),
+            child: _screens.elementAt(value),
           ),
         ),
         bottomNavigationBar: ValueListenableBuilder<int>(

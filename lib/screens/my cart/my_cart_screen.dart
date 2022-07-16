@@ -134,7 +134,8 @@ class _MyCartScreenState extends State<MyCartScreen> {
                             buttonOnTap: () async {
                               if (cartprovider.getCartDeliveryAddress == null) {
                                 return CustomSnackbar.showSnackbar(context,
-                                    content:
+                                    type: 2,
+                                    title:
                                         "Please add an address to continue.");
                               }
                               NavigatorService.push(context,

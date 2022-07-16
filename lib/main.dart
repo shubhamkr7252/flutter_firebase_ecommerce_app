@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/notification_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/authentication/splash_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/brands_provider.dart';
@@ -67,17 +68,19 @@ class _MainState extends State<Main> {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overscroll) {
-          overscroll.disallowIndicator();
-          return true;
-        },
-        child: MaterialApp(
-          theme: LightTheme.data(context),
-          darkTheme: DarkTheme.data(context),
-          themeMode: ThemeMode.system,
-          debugShowCheckedModeBanner: false,
-          home: const SplashScreen(),
+      child: OKToast(
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (overscroll) {
+            overscroll.disallowIndicator();
+            return true;
+          },
+          child: MaterialApp(
+            theme: LightTheme.data(context),
+            darkTheme: DarkTheme.data(context),
+            themeMode: ThemeMode.system,
+            debugShowCheckedModeBanner: false,
+            home: const SplashScreen(),
+          ),
         ),
       ),
     );

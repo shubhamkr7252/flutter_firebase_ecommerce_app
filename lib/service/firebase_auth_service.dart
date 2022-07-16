@@ -25,10 +25,14 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         CustomSnackbar.showSnackbar(context,
-            content: "No user found for that email.");
+            title: "Invalid user",
+            description: "Please provide a valid email address.",
+            type: 2);
       } else if (e.code == 'wrong-password') {
         CustomSnackbar.showSnackbar(context,
-            content: "Wrong password provided for that user.");
+            title: "Invalid credentials",
+            description: "Please provider correct password.",
+            type: 2);
       }
     } catch (e) {
       log(e.toString());
@@ -55,10 +59,14 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         CustomSnackbar.showSnackbar(context,
-            content: "The password provided is too weak.");
+            title: "The password provided is too weak",
+            description: "Please use a strong password.",
+            type: 2);
       } else if (e.code == 'email-already-in-use') {
         CustomSnackbar.showSnackbar(context,
-            content: "The account already exists for that email.");
+            title: "The account already exists for that email",
+            description: "Please use a differnent email address.",
+            type: 2);
       }
     } catch (e) {
       log(e.toString());

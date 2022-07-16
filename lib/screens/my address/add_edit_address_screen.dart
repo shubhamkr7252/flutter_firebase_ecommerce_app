@@ -304,8 +304,11 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                             addressID: newAddressData["addressId"]);
                       }
 
-                      CustomSnackbar.showSnackbar(context,
-                          content: "Address added");
+                      CustomSnackbar.showSnackbar(
+                        context,
+                        title: "Address added",
+                        type: 1,
+                      );
                     } else {
                       Map<String, dynamic> updatedAddressData = {
                         "addressId": widget.addressData!.addressId,
@@ -332,7 +335,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                       }
 
                       CustomSnackbar.showSnackbar(context,
-                          content: "Address updated");
+                          title: "Address updated", type: 1);
                     }
 
                     Navigator.of(context).pop();
