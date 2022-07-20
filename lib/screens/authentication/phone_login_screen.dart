@@ -12,7 +12,7 @@ import '../../service/firebase_auth_service.dart';
 import '../../utils/form_validart.dart';
 import '../../widgets/custom loader/custom_loader.dart';
 import '../../widgets/custom_text_input.dart';
-import 'otp_verification_screen.dart';
+import 'phone_otp_verification_screen.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({Key? key}) : super(key: key);
@@ -220,7 +220,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                                         isScrollControlled: true,
                                         backgroundColor: Colors.transparent,
                                         builder: (context) =>
-                                            OTPVerificationScreen(
+                                            PhoneOTPVerificationScreen(
                                           phoneNumber: _phoneController.text,
                                           countryCode: countrycode,
                                           verificationCode: verCode,
@@ -262,7 +262,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                                           isScrollControlled: true,
                                           backgroundColor: Colors.transparent,
                                           builder: (context) =>
-                                              OTPVerificationScreen(
+                                              PhoneOTPVerificationScreen(
                                             phoneNumber: _phoneController.text,
                                             countryCode: countrycode,
                                             verificationCode:

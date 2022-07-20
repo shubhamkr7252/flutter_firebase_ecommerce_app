@@ -6,13 +6,15 @@ import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/upload_user_profile_image_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/utils/form_validart.dart';
-import 'package:flutter_firebase_ecommerce_app/extension/string_casing_extension.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_button_a.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_scaffold.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_text_input.dart';
 import 'package:validators/validators.dart';
 import '../../theme/size.dart';
+import '../../widgets/custom_snackbar.dart';
 import 'components/edit_profile_image_selection_bottom_sheet.dart';
+import 'email_otp_verification_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -30,6 +32,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   late UserProvider _userProvider;
 
+  late EmailAuth _emailAuth;
+
   @override
   void initState() {
     _firstNameController = TextEditingController();
@@ -42,6 +46,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _firstNameController.text = _userProvider.getCurrentUser!.firstName!;
     _lastNameController.text = _userProvider.getCurrentUser!.lastName!;
     _emailController.text = _userProvider.getCurrentUser!.email!;
+
+    _emailAuth = EmailAuth(sessionName: "Fly Buy");
+
     super.initState();
   }
 
@@ -187,6 +194,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     controller: _firstNameController,
                                     hintTxt: "First Name",
                                     validator: (String? value) {
+                                      if (value!.isEmpty) {
+                                        return "Please enter your first name";
+                                      }
                                       return null;
                                     },
                                     capitalization: TextCapitalization.words,
@@ -198,6 +208,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       controller: _lastNameController,
                                       hintTxt: "Last Name",
                                       validator: (String? value) {
+                                        if (value!.isEmpty) {
+                                          return "Please enter your first name";
+                                        }
                                         return null;
                                       },
                                       capitalization: TextCapitalization.words),
@@ -207,8 +220,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     controller: _emailController,
                                     hintTxt: "Email",
                                     validator: (String? value) {
-                                      if (value!.isNotEmpty &&
-                                          !isEmail(value)) {
+                                      if (value!.isEmpty) {
+                                        return "Please enter your email";
+                                      }
+                                      if (value.isNotEmpty && !isEmail(value)) {
                                         return "Please enter a valid email";
                                       }
                                       return null;
@@ -224,27 +239,73 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             buttonText: "Save",
                                             onPress: () async {
                                               FocusScope.of(context).unfocus();
-                                              if (FormValidator.validate(
+                                              if (!FormValidator.validate(
                                                   key: _formKey)) {
+                                                return;
+                                              }
+
+                                              if (userprovider
+                                                      .getCurrentUser!.email!
+                                                      .toLowerCase() ==
+                                                  _emailController.text
+                                                      .toLowerCase()) {
                                                 await userprovider
                                                     .updateUserData(
                                                   context,
                                                   firstName:
-                                                      _firstNameController.text
-                                                          .trim(),
-                                                  lastName: _lastNameController
-                                                      .text
-                                                      .trim()
-                                                      .toTitleCase(),
-                                                  email: _emailController.text
-                                                      .trim(),
+                                                      _firstNameController.text,
+                                                  lastName:
+                                                      _lastNameController.text,
+                                                  email: _emailController.text,
                                                 );
 
-                                                Future.delayed(const Duration(
-                                                        seconds: 1))
-                                                    .then((value) {
-                                                  Navigator.of(context).pop();
-                                                });
+                                                CustomSnackbar.showSnackbar(
+                                                    context,
+                                                    title:
+                                                        "Profile updated successfully",
+                                                    type: 1);
+
+                                                Navigator.of(context).pop();
+                                              } else {
+                                                bool _result =
+                                                    await _emailAuth.sendOtp(
+                                                        recipientMail:
+                                                            _emailController
+                                                                .text
+                                                                .trim(),
+                                                        otpLength: 5);
+
+                                                if (_result) {
+                                                  return showModalBottomSheet(
+                                                      context: context,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      isDismissible: false,
+                                                      enableDrag: false,
+                                                      isScrollControlled: true,
+                                                      builder: (context) =>
+                                                          EmailOTPVerificationScreen(
+                                                            timeout: 60,
+                                                            email:
+                                                                _emailController
+                                                                    .text
+                                                                    .trim(),
+                                                            emailAuthService:
+                                                                _emailAuth,
+                                                            firstName:
+                                                                _firstNameController
+                                                                    .text,
+                                                            lastName:
+                                                                _lastNameController
+                                                                    .text
+                                                                    .trim(),
+                                                          ));
+                                                }
+                                                return CustomSnackbar
+                                                    .showSnackbar(context,
+                                                        title:
+                                                            "Some error occurred",
+                                                        type: 2);
                                               }
                                             }),
                                   ),

@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 import '../../widgets/custom loader/custom_loader.dart';
 import '../../widgets/custom_bottom_sheet_close_button.dart';
 
-class OTPVerificationScreen extends StatefulWidget {
-  const OTPVerificationScreen({
+class PhoneOTPVerificationScreen extends StatefulWidget {
+  const PhoneOTPVerificationScreen({
     Key? key,
     required this.phoneNumber,
     required this.countryCode,
@@ -26,10 +26,12 @@ class OTPVerificationScreen extends StatefulWidget {
   final int timeout;
 
   @override
-  State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
+  State<PhoneOTPVerificationScreen> createState() =>
+      _PhoneOTPVerificationScreenState();
 }
 
-class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+class _PhoneOTPVerificationScreenState
+    extends State<PhoneOTPVerificationScreen> {
   late ValueNotifier<bool> _hasError;
   late ValueNotifier<String> _verificationCode;
   late ValueNotifier<int> _timeoutTimer;
@@ -176,7 +178,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                                       return CustomSnackbar.showSnackbar(
                                           context,
                                           title:
-                                              "Please wait until timeout to resend code.");
+                                              "Please wait until timeout to resend code");
                                     }
 
                                     _isOTPResending.value = true;

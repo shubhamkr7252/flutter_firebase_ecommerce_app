@@ -52,6 +52,7 @@ class UserDatabaseConnection {
       "firstName": userData.firstName,
       "lastName": userData.lastName,
       "email": userData.email,
+      "isEmailVerified": userData.email!.isNotEmpty ? true : false,
     });
   }
 

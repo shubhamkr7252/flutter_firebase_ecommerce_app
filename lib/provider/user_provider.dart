@@ -63,6 +63,7 @@ class UserProvider extends ChangeNotifier {
         "image": null,
         "phoneNumber": userIdAndToken["phone"],
         "tokens": [userIdAndToken["token"]],
+        "isEmailVerified": false,
       });
 
       UserData? _userDocData = await UserDatabaseConnection().fetchUserData(
@@ -105,7 +106,7 @@ class UserProvider extends ChangeNotifier {
       _currentUser!.lastName = lastName.toCapitalized();
       _isDataChanged = true;
     }
-    if (email.isNotEmpty && email != _currentUser!.email) {
+    if (email != _currentUser!.email) {
       _currentUser!.email = email.toLowerCase();
       _isDataChanged = true;
     }

@@ -13,6 +13,8 @@ class UserData {
 
   List<String>? tokens;
 
+  bool? isEmailVerified;
+
   UserData({
     this.id,
     this.email,
@@ -21,6 +23,7 @@ class UserData {
     this.image,
     this.tokens,
     this.phoneNumber,
+    this.isEmailVerified,
   });
 
   factory UserData.fromJson(var obj) {
@@ -36,6 +39,7 @@ class UserData {
           ? "https://www.wallpaperup.com/template/dist/images/default/avatar.png?v=3.5.1"
           : data["image"],
       tokens: List.from(data["tokens"]),
+      isEmailVerified: data["isEmailVerified"] ?? false,
     );
   }
 
@@ -47,5 +51,6 @@ class UserData {
         "lastName": lastName,
         "phoneNumber": phoneNumber,
         "tokens": tokens,
+        "isEmailVerified": isEmailVerified,
       };
 }
