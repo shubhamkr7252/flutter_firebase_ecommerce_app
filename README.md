@@ -86,3 +86,5 @@ swipeable_page_route | https://pub.dev/packages/swipeable_page_route
 tap_debouncer | https://pub.dev/packages/tap_debouncer
 uuid | https://pub.dev/packages/uuid
 validators | https://pub.dev/packages/validators
+<br/>
+- App icon from - https://www.flaticon.com/free-icon/sale_4296709?related_id=4296709&origin=search by Pixel perfect
