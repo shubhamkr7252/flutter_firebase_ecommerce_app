@@ -206,7 +206,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     controller: _emailController,
                                     hintTxt: "Email",
                                     validator: (String? value) {
-                                      if (value!.isNotEmpty && isEmail(value)) {
+                                      if (value!.isNotEmpty &&
+                                          !isEmail(value)) {
                                         return "Please enter a valid email";
                                       }
                                       return null;
