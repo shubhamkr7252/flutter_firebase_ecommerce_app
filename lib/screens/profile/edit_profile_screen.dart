@@ -133,10 +133,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           onTap: () {
                                             showModalBottomSheet(
                                               context: context,
-                                              backgroundColor:
-                                                  Colors.transparent,
                                               elevation: 0,
                                               isScrollControlled: true,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              isDismissible: false,
+                                              enableDrag: false,
                                               builder: (context) =>
                                                   const EditProfileImageSelectionBottomSheet(),
                                             );

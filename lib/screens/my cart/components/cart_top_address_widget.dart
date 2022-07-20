@@ -154,9 +154,11 @@ class CartTopAddressWidget extends StatelessWidget {
                     } else {
                       showModalBottomSheet(
                         context: context,
-                        backgroundColor: Colors.transparent,
                         elevation: 0,
                         isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        isDismissible: false,
+                        enableDrag: false,
                         builder: (context) => CartAddressSelectionBottomSheet(
                           defaultCartAddressId:
                               cartprovider.getCartDeliveryAddress!.addressId!,

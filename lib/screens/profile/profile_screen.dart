@@ -212,8 +212,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (userprovider.getCurrentUser != null) {
                               showModalBottomSheet(
                                   context: context,
+                                  elevation: 0,
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
+                                  isDismissible: false,
+                                  enableDrag: false,
                                   builder: (_) => CustomConfirmationBottomSheet(
                                         title: "Logout",
                                         buttonColor:

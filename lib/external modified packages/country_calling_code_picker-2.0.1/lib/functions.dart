@@ -48,6 +48,7 @@ Future<Country?> showCountryPickerSheet(BuildContext context,
       'heightFactor must be between 0.4 and 0.9');
   return showModalBottomSheet<Country?>(
       context: context,
+      elevation: 0,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       isDismissible: false,

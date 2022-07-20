@@ -80,8 +80,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
   void _handlePaymentError(PaymentFailureResponse response) {
     showModalBottomSheet(
         context: context,
+        elevation: 0,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
+        isDismissible: false,
+        enableDrag: false,
         builder: (context) => CartResponseWidget(
               title: "Oops! Payment failed",
               description: "Please retry or use another payment method.",

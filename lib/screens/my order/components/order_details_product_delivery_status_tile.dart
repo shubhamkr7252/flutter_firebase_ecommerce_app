@@ -42,8 +42,11 @@ class OrderDetailsProductDeliveryStatusTile extends StatelessWidget {
               onButtonTap: () async {
                 showModalBottomSheet(
                     context: context,
+                    elevation: 0,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
+                    isDismissible: false,
+                    enableDrag: false,
                     builder: (context) => Consumer<UserProvider>(
                           builder: (context, userprovider, _) =>
                               CustomConfirmationBottomSheet(

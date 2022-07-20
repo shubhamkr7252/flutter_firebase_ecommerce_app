@@ -120,6 +120,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 onPressed: () async {
                   showModalBottomSheet(
                       context: context,
+                      elevation: 0,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      isDismissible: false,
+                      enableDrag: false,
                       builder: (context) => CustomConfirmationBottomSheet(
                           title: "Clear Notifications?",
                           buttonColor: Theme.of(context).colorScheme.error,
