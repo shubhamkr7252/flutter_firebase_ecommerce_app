@@ -11,6 +11,8 @@ import 'package:flutter_firebase_ecommerce_app/widgets/custom_bottom_sheet_drag_
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_button_a.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_loading_indicator.dart';
 
+import '../../../widgets/custom_bottom_sheet_close_button.dart';
+
 class CartTopAddressWidget extends StatelessWidget {
   const CartTopAddressWidget({
     Key? key,
@@ -53,7 +55,7 @@ class CartTopAddressWidget extends StatelessWidget {
                             fontFamily: "Poppins"),
                       ),
                     ] else ...[
-                      const Text("No address added")
+                      const Text("No address found")
                     ],
                     if (hideButton == false &&
                         cartprovider.getCartDeliveryAddress != null)
@@ -197,93 +199,114 @@ class _CartAddressSelectionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            borderRadius:
-                BorderRadius.circular(SizeConfig.screenHeight! * .01)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CustomBottomSheetDragHandleWithTitle(
-                title: "Select Delivery Address"),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.screenHeight! * .015),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Consumer<CartProvider>(
-                    builder: (context, cartprovider, _) =>
-                        Consumer<UserAddressesProvider>(
-                            builder: (context, addressproivder, _) {
-                      if (addressproivder.isDataLoaded == true &&
-                          addressproivder
-                              .allAddressesData!.addresses!.isNotEmpty) {
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: List.generate(
-                                  addressproivder.allAddressesData!.addresses!
-                                      .length, (index) {
-                                return Padding(
-                                  padding: index == 0
-                                      ? EdgeInsets.only(
-                                          left: SizeConfig.screenHeight! * .015,
-                                          right:
-                                              SizeConfig.screenHeight! * .015)
-                                      : EdgeInsets.only(
-                                          right:
-                                              SizeConfig.screenHeight! * .015),
-                                  child: CartAddressTile(
-                                    addressData: addressproivder
-                                        .allAddressesData!.addresses![index],
-                                    isDefault: addressproivder.allAddressesData!
-                                            .addresses![index].addressId ==
-                                        cartprovider
-                                            .getCartDeliveryAddress!.addressId,
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
-                        );
-                      } else if (addressproivder.isDataLoaded == true &&
-                          addressproivder
-                              .allAddressesData!.addresses!.isNotEmpty) {
-                        return const SizedBox();
-                      }
-                      return const CustomLoadingIndicator(indicatorSize: 20);
-                    }),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CustomBottomSheetCloseButton(),
+        Padding(
+          padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
+          child: Container(
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.25),
+                    blurRadius: 2.0,
                   ),
                 ],
-              ),
+                color: Theme.of(context).colorScheme.background,
+                borderRadius:
+                    BorderRadius.circular(SizeConfig.screenHeight! * .01)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CustomBottomSheetDragHandleWithTitle(
+                    title: "Select Delivery Address"),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.screenHeight! * .015),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Consumer<CartProvider>(
+                        builder: (context, cartprovider, _) =>
+                            Consumer<UserAddressesProvider>(
+                                builder: (context, addressproivder, _) {
+                          if (addressproivder.isDataLoaded == true &&
+                              addressproivder
+                                  .allAddressesData!.addresses!.isNotEmpty) {
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: IntrinsicHeight(
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: List.generate(
+                                      addressproivder.allAddressesData!
+                                          .addresses!.length, (index) {
+                                    return Padding(
+                                      padding: index == 0
+                                          ? EdgeInsets.only(
+                                              left: SizeConfig.screenHeight! *
+                                                  .015,
+                                              right: SizeConfig.screenHeight! *
+                                                  .015)
+                                          : EdgeInsets.only(
+                                              right: SizeConfig.screenHeight! *
+                                                  .015),
+                                      child: CartAddressTile(
+                                        addressData: addressproivder
+                                            .allAddressesData!
+                                            .addresses![index],
+                                        isDefault: addressproivder
+                                                .allAddressesData!
+                                                .addresses![index]
+                                                .addressId ==
+                                            cartprovider.getCartDeliveryAddress!
+                                                .addressId,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            );
+                          } else if (addressproivder.isDataLoaded == true &&
+                              addressproivder
+                                  .allAddressesData!.addresses!.isNotEmpty) {
+                            return const SizedBox();
+                          }
+                          return const CustomLoadingIndicator(
+                              indicatorSize: 20);
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      SizeConfig.screenHeight! * .015,
+                      0.0,
+                      SizeConfig.screenHeight! * .015,
+                      SizeConfig.screenHeight! * .015),
+                  child: CustomButtonA(
+                      buttonText: "Add New Address",
+                      onPress: () {
+                        NavigatorService.push(context,
+                            page: AddEditAddressScreen(
+                                index: _userAddressesProvider
+                                        .allAddressesData!.addresses!.length +
+                                    1));
+                      }),
+                )
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                  SizeConfig.screenHeight! * .015,
-                  0.0,
-                  SizeConfig.screenHeight! * .015,
-                  SizeConfig.screenHeight! * .015),
-              child: CustomButtonA(
-                  buttonText: "Add New Address",
-                  onPress: () {
-                    NavigatorService.push(context,
-                        page: AddEditAddressScreen(
-                            index: _userAddressesProvider
-                                    .allAddressesData!.addresses!.length +
-                                1));
-                  }),
-            )
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

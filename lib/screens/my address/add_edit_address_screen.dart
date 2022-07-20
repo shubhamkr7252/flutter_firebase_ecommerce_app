@@ -13,6 +13,9 @@ import 'package:flutter_firebase_ecommerce_app/widgets/custom_scaffold.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_snackbar.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_text_input.dart';
 
+import 'package:flutter_firebase_ecommerce_app/external%20modified%20packages/country_calling_code_picker-2.0.1/lib/country.dart';
+import 'package:flutter_firebase_ecommerce_app/external%20modified%20packages/country_calling_code_picker-2.0.1/lib/functions.dart';
+
 class AddEditAddressScreen extends StatefulWidget {
   const AddEditAddressScreen({Key? key, required this.index, this.addressData})
       : super(key: key);
@@ -38,10 +41,9 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
   late TextEditingController _pinCodeController;
 
   late bool _isDefaultAddress;
-
   late ScrollController _scrollController;
-
   late ValueNotifier<bool> _isUserScrolling;
+  late ValueNotifier<String> _countryCode;
 
   @override
   void initState() {
@@ -68,6 +70,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
     }
 
     _isUserScrolling = ValueNotifier<bool>(false);
+    _countryCode = ValueNotifier<String>("");
 
     _scrollController = ScrollController();
     _scrollController.addListener(() {
@@ -87,6 +90,11 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
     });
 
     _isDefaultAddress = false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final Country country = await getDefaultCountry(context);
+      _countryCode.value = country.callingCode;
+    });
 
     super.initState();
   }
@@ -169,24 +177,56 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                     },
                   ),
                   SizedBox(height: SizeConfig.screenHeight! * .015),
-                  CustomTextInput(
-                    hintTxt: "Phone",
-                    controller: _phoneController,
-                    isNumberInput: true,
-                    maxLength: 10,
-                    validator: (String? value) {
-                      if (value!.isEmpty) {
-                        return "Phone field cannot be empty.";
-                      } else if (value.length > 10) {
-                        return "Phone cannot be more than 6 digits.";
-                      }
-                      return null;
-                    },
+                  ValueListenableBuilder<String>(
+                    valueListenable: _countryCode,
+                    builder: (context, countrycode, _) => CustomTextInput(
+                      hintTxt: "Phone",
+                      controller: _phoneController,
+                      isSpaceDenied: true,
+                      isNumberInput: true,
+                      maxLength: countrycode == "+91" ? 10 : null,
+                      prefixIcon: InkWell(
+                        onTap: () async {
+                          Country? _country =
+                              await showCountryPickerSheet(context);
+
+                          if (_country != null) {
+                            _countryCode.value = _country.callingCode;
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.screenWidth! * .03,
+                            vertical: SizeConfig.screenWidth! * .015,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(
+                                SizeConfig.screenHeight! * .01),
+                          ),
+                          child: Text(
+                            countrycode,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.background,
+                                fontSize: SizeConfig.screenWidth! * .0375),
+                          ),
+                        ),
+                      ),
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return "Phone field cannot be empty.";
+                        } else if (value.length > 10) {
+                          return "Phone cannot be more than 6 digits.";
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                   SizedBox(height: SizeConfig.screenHeight! * .015),
                   CustomTextInput(
                     hintTxt: "Email",
                     controller: _emailController,
+                    isSpaceDenied: true,
                     validator: (String? value) {
                       if (value!.isEmpty) {
                         return "Email field cannot be empty.";
@@ -249,6 +289,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                     hintTxt: "Pin Code",
                     controller: _pinCodeController,
                     isNumberInput: true,
+                    isSpaceDenied: true,
                     maxLength: 6,
                     validator: (String? value) {
                       if (value!.isEmpty) {

@@ -195,6 +195,9 @@ class _HomeMainNavigationState extends State<HomeMainNavigation> {
                               } else {
                                 showModalBottomSheet(
                                     context: context,
+                                    isDismissible: false,
+                                    enableDrag: false,
+                                    elevation: 0,
                                     backgroundColor: Colors.transparent,
                                     isScrollControlled: true,
                                     builder: (context) =>

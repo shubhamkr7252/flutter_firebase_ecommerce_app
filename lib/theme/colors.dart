@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LightAppColors {
-  static Color primary = Colors.indigo[500]!;
-  static Color secondary = primary;
+  static Color primary = Colors.indigo[600]!;
+  static Color secondary = Colors.deepOrange[700]!;
   static Color background = Colors.white;
   static Color dividerColor = Colors.grey[300]!;
   static Color outlineButtonBorderCol = Colors.grey[500]!;
@@ -14,7 +14,7 @@ class LightAppColors {
 
 class DarkAppColors {
   static Color primary = Colors.indigo[100]!;
-  static Color secondary = primary;
+  static Color secondary = Colors.orangeAccent[100]!;
   static Color background = Colors.black;
   static Color dividerColor = Colors.grey[600]!;
   static Color textColor = Colors.white;

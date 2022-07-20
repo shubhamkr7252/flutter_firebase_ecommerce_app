@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late ValueNotifier<bool> _isDataLoading;
   late ScrollController _scrollController;
 
+  late int _highlightsLengthPerQuery;
+
   @override
   void initState() {
     _provider = Provider.of<HomeCMSProvider>(context, listen: false);
@@ -59,6 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _isDataLoading = ValueNotifier<bool>(false);
 
+    ///change this value to fetch given list of highlights at the same time
+    _highlightsLengthPerQuery = 2;
+
     _scrollController = ScrollController();
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
@@ -67,17 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
             _provider.isBannerDataLoaded == false) {
           return;
         }
-        if (_provider.allHomeCMSHighlightsBlueprintData.length ==
-            _provider.allHomeCMSHighlightsData.length) {
-          return;
-        } else {
-          _isDataLoading.value = true;
-          await _provider.fetchCMSHomeHighlightsData(
-            data: _provider.allHomeCMSHighlightsBlueprintData[
-                _provider.allHomeCMSHighlightsData.length],
-          );
-          _isDataLoading.value = false;
+
+        _isDataLoading.value = true;
+
+        for (int i = 0; i < _highlightsLengthPerQuery; i++) {
+          await _provider.fetchNextCMSHomeHighlightsData();
         }
+        _isDataLoading.value = false;
       }
     });
 
@@ -163,19 +164,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AnimatedSlide(
-                      offset: value == true
-                          ? const Offset(0, 0)
-                          : const Offset(0, 1),
-                      duration: const Duration(milliseconds: 300),
-                      child: CustomLoadingIndicator(
-                          indicatorSize: SizeConfig.screenWidth! * .055),
+                if (homecmsprovider.isHighlightsDataLoaded == true &&
+                    homecmsprovider.isBannerDataLoaded == true)
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: AnimatedOpacity(
+                        opacity: value ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: CustomLoadingIndicator(
+                            indicatorSize: SizeConfig.screenWidth! * .055),
+                      ),
                     ),
-                  ),
-                )
+                  )
               ],
             ),
           ),

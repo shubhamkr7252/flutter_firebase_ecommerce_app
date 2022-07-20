@@ -48,10 +48,9 @@ class OrderDetailsProductDeliveryStatusTile extends StatelessWidget {
                           builder: (context, userprovider, _) =>
                               CustomConfirmationBottomSheet(
                                   title: "Cancel Order",
-                                  negativeButtonText: "Go back",
                                   customChild: MyOrderProductTile(
                                       data: orderData.productData!),
-                                  positiveButtonOnTap: () async {
+                                  buttonOnTap: () async {
                                     await orderprovider.cancelOrder(context,
                                         orderProductData: orderData,
                                         orderId: orderId,
@@ -60,7 +59,9 @@ class OrderDetailsProductDeliveryStatusTile extends StatelessWidget {
 
                                     Navigator.of(context).pop();
                                   },
-                                  positiveButtonText: "Cancel Order"),
+                                  buttonColor:
+                                      Theme.of(context).colorScheme.error,
+                                  buttonText: "Cancel Order"),
                         ));
               },
             ),

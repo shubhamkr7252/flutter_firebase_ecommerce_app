@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/profile/components/custom_confirmation_bottom_sheet.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/upload_user_profile_image_provider.dart';
@@ -188,10 +188,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       return null;
                                     },
                                     capitalization: TextCapitalization.words,
-                                    formatters: [
-                                      FilteringTextInputFormatter.deny(
-                                          RegExp(r'\s')),
-                                    ],
+                                    isSpaceDenied: true,
                                   ),
                                   SizedBox(
                                       height: SizeConfig.screenHeight! * .005),
@@ -250,6 +247,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             textColor: Theme.of(context).colorScheme.error,
                             onPress: () {
                               FocusScope.of(context).unfocus();
+                              showModalBottomSheet(
+                                  context: context,
+                                  isDismissible: false,
+                                  isScrollControlled: true,
+                                  enableDrag: false,
+                                  elevation: 0,
+                                  builder: (context) =>
+                                      CustomConfirmationBottomSheet(
+                                          title: "Delete Account?",
+                                          description:
+                                              "Are you sure you want to delete your account? Deleting account will remove all your data and you will have to create a new account to use the app again.",
+                                          buttonOnTap: () async {
+                                            await userprovider
+                                                .deleteAccount(context);
+                                          },
+                                          buttonText: "Save"));
                             }),
                       ),
                     ),

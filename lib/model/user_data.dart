@@ -9,6 +9,8 @@ class UserData {
 
   String? image;
 
+  String? phoneNumber;
+
   List<String>? tokens;
 
   UserData({
@@ -18,6 +20,7 @@ class UserData {
     this.lastName,
     this.image,
     this.tokens,
+    this.phoneNumber,
   });
 
   factory UserData.fromJson(var obj) {
@@ -28,6 +31,7 @@ class UserData {
       email: data["email"] ?? "",
       firstName: data["firstName"] ?? "",
       lastName: data["lastName"] ?? "",
+      phoneNumber: data["phoneNumber"] ?? "",
       image: data["image"] == null || data["image"].toString().isEmpty
           ? "https://www.wallpaperup.com/template/dist/images/default/avatar.png?v=3.5.1"
           : data["image"],
@@ -41,6 +45,7 @@ class UserData {
         "image": image,
         "firstName": firstName,
         "lastName": lastName,
+        "phoneNumber": phoneNumber,
         "tokens": tokens,
       };
 }

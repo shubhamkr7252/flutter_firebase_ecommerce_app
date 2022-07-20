@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/brands_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/cart_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/categories_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/provider/firebase_auth_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/home_cms_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/products_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/search_provider.dart';
@@ -63,7 +62,6 @@ class _MainState extends State<Main> {
         ChangeNotifierProvider(create: (_) => HomeCMSProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
         ChangeNotifierProvider(create: (_) => UploadUserProfileImageProvider()),
-        ChangeNotifierProvider(create: (_) => FirebaseAuthProvider()),
         ChangeNotifierProvider(create: (_) => UserAddressesProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),

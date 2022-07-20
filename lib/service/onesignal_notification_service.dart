@@ -10,7 +10,7 @@ class OnesignalNotificationService {
     required List<String> tokenIds,
   }) async {
     try {
-      Response _response = await Dio().post(
+      await Dio().post(
         "https://onesignal.com/api/v1/notifications",
         options: Options(
           headers: {

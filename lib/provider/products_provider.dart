@@ -3,7 +3,6 @@ import 'package:flutter_firebase_ecommerce_app/database/products.dart';
 import 'package:flutter_firebase_ecommerce_app/database/seach.dart';
 import 'package:flutter_firebase_ecommerce_app/model/product.dart';
 
-enum LoadMoreStatus { INITIAL, LOADING, STABLE }
 
 class ProductProvider with ChangeNotifier {
   List<ProductListModel> _allProductsData = [];

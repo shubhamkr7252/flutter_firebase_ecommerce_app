@@ -18,6 +18,15 @@ class UserAddressesProvider extends ChangeNotifier {
 
   UserAddressObject? get getDefaultAddressData => _defaultAddressData;
 
+  void resetData() {
+    _addressesData = null;
+    _defaultAddressData = null;
+    _isDataLoaded = false;
+    _isDataUpdating = false;
+
+    notifyListeners();
+  }
+
   ///function to fetch address data
   Future<void> fetchAddressesData(BuildContext context,
       {required String userId}) async {

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/cart_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/notification_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/order_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/search_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/user_address_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/provider/wishlist_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/service/firebase_auth_service.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/database/user.dart';
 import 'package:flutter_firebase_ecommerce_app/model/user_data.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/upload_user_profile_image_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/home%20main%20navigation/home_main_navigation.dart';
 import 'package:flutter_firebase_ecommerce_app/service/auth_service.dart';
-import 'package:flutter_firebase_ecommerce_app/service/firebase_auth_service.dart';
-import 'package:flutter_firebase_ecommerce_app/service/hive_boxes.dart';
-import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/extension/string_casing_extension.dart';
+
+import '../screens/home main navigation/home_main_navigation.dart';
+import '../service/hive_boxes.dart';
+import '../service/navigator_service.dart';
 
 class UserProvider extends ChangeNotifier {
   UserData? _currentUser;
@@ -20,11 +27,20 @@ class UserProvider extends ChangeNotifier {
 
   void resetData() {
     _currentUser = null;
+    _isLoading = false;
+    notifyListeners();
   }
 
-  Future<bool> init({required String userId, required String token}) async {
-    _currentUser = await UserDatabaseConnection()
-        .fetchUserData(userId: userId, token: token);
+  Future<bool> init(
+      {required String userId,
+      required String token,
+      UserData? userData}) async {
+    if (userData == null) {
+      _currentUser = await UserDatabaseConnection()
+          .fetchUserData(userId: userId, token: token);
+    } else {
+      _currentUser = userData;
+    }
 
     notifyListeners();
 
@@ -35,59 +51,35 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  ///function for logout
-  Future<void> userLogout(BuildContext context) async {
-    OSDeviceState? _oneSignalStatus = await OneSignal.shared.getDeviceState();
-    await UserDatabaseConnection().removeTokenData(
-        userId: _currentUser!.id!, token: _oneSignalStatus!.userId!);
-    await AuthService.logout(context);
-
-    notifyListeners();
-  }
-
-  ///function to register
-  Future<void> addNewUser(BuildContext context,
-      {required UserData userData, required String password}) async {
-    Map<String, dynamic>? responseUserData =
-        await FirebaseAuthService.createUser(context,
-            email: userData.email!, password: password);
-
-    if (responseUserData != null) {
-      UserData newUserData = UserData.fromJson({
-        "id": responseUserData["uid"],
-        "firstName": userData.firstName,
-        "lastName": userData.lastName,
-        "email": userData.email,
-        "token": [responseUserData["token"]],
+  ///function for phone authentication
+  Future<void> phoneLogin(BuildContext context,
+      {required Map<String, dynamic>? userIdAndToken}) async {
+    if (userIdAndToken != null) {
+      UserData _newUserData = UserData.fromJson({
+        "id": userIdAndToken["uid"],
+        "firstName": "",
+        "lastName": "",
+        "email": "",
+        "image": null,
+        "phoneNumber": userIdAndToken["phone"],
+        "tokens": [userIdAndToken["token"]],
       });
 
-      await UserDatabaseConnection().addNewUserData(data: newUserData);
-      _currentUser = newUserData;
+      UserData? _userDocData = await UserDatabaseConnection().fetchUserData(
+          userId: userIdAndToken["uid"], token: userIdAndToken["token"]);
+
+      if (_userDocData == null) {
+        await UserDatabaseConnection().addNewUserData(data: _newUserData);
+        _currentUser = _newUserData;
+      } else {
+        _currentUser = _userDocData;
+      }
 
       HiveBoxes.registerAdapters();
 
-      NavigatorService.pushReplaceUntil(context,
-          page: const HomeMainNavigation());
-    } else {
-      return;
-    }
-  }
+      notifyListeners();
 
-  ///function to login
-  Future<void> login(BuildContext context,
-      {required String email, required String password}) async {
-    Map<String, dynamic>? responseUserData = await FirebaseAuthService.login(
-        context,
-        email: email,
-        password: password);
-    if (responseUserData != null) {
-      _currentUser = await UserDatabaseConnection().fetchUserData(
-          userId: responseUserData["uid"], token: responseUserData["token"]);
-
-      HiveBoxes.registerAdapters();
-
-      NavigatorService.pushReplaceUntil(context,
-          page: const HomeMainNavigation());
+      NavigatorService.push(context, page: const HomeMainNavigation());
     } else {
       return;
     }
@@ -125,5 +117,67 @@ class UserProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  ///function for logout
+  Future<void> userLogout(BuildContext context) async {
+    OSDeviceState? _oneSignalStatus = await OneSignal.shared.getDeviceState();
+    await UserDatabaseConnection().removeTokenData(
+        userId: _currentUser!.id!, token: _oneSignalStatus!.userId!);
+
+    SearchProvider _seachProvider = Provider.of(context, listen: false);
+    _seachProvider.resetData();
+
+    CartProvider _cartProvider = Provider.of(context, listen: false);
+    _cartProvider.resetData();
+
+    OrderProvider _orderProvider = Provider.of(context, listen: false);
+    _orderProvider.resetData();
+
+    WishlistProvider _wishlistProvider = Provider.of(context, listen: false);
+    _wishlistProvider.resetData();
+
+    NotificationProvider _notifciationProvider =
+        Provider.of(context, listen: false);
+    _notifciationProvider.resetData();
+
+    UserAddressesProvider _userAddressProvider =
+        Provider.of(context, listen: false);
+    _userAddressProvider.resetData();
+
+    await HiveBoxes.clearData();
+
+    await AuthService.logout(context);
+    notifyListeners();
+  }
+
+  ///function to delete account and reset all provider data
+  Future<void> deleteAccount(BuildContext context) async {
+    await UserDatabaseConnection()
+        .deleteUserAccount(context, userId: _currentUser!.id!);
+
+    SearchProvider _seachProvider = Provider.of(context, listen: false);
+    _seachProvider.resetData();
+
+    CartProvider _cartProvider = Provider.of(context, listen: false);
+    _cartProvider.resetData();
+
+    OrderProvider _orderProvider = Provider.of(context, listen: false);
+    _orderProvider.resetData();
+
+    WishlistProvider _wishlistProvider = Provider.of(context, listen: false);
+    _wishlistProvider.resetData();
+
+    NotificationProvider _notifciationProvider =
+        Provider.of(context, listen: false);
+    _notifciationProvider.resetData();
+
+    UserAddressesProvider _userAddressProvider =
+        Provider.of(context, listen: false);
+    _userAddressProvider.resetData();
+
+    await HiveBoxes.clearData();
+
+    await FirebaseAuthService.deleteAccount(context);
   }
 }

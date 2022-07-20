@@ -32,21 +32,30 @@ class HomeCMSProvider extends ChangeNotifier {
     _allHomeCMSHighlightsBlueprintData =
         await HomeCMSHighlightsDatabaseConnection().getHomeHighlightsData();
 
-    for (int i = 0; i < 1; i++) {
-      await fetchCMSHomeHighlightsData(
-          data: _allHomeCMSHighlightsBlueprintData[i]);
+    for (int i = 0; i < 2; i++) {
+      HomeCMSHighlightsModel _highlightsData =
+          await HomeCMSHighlightsDatabaseConnection().getHightlightsAllData(
+              data: _allHomeCMSHighlightsBlueprintData[i]);
+
+      _allHomeCMSHighlightsData.add(_highlightsData);
     }
+
     _isHighlightsDataLoaded = true;
     notifyListeners();
   }
 
-  Future<void> fetchCMSHomeHighlightsData(
-      {required HomeCMSHighlightsBlueprintModel data}) async {
-    HomeCMSHighlightsModel _highlightsData =
-        await HomeCMSHighlightsDatabaseConnection()
-            .getHightlightsAllData(data: data);
+  Future<void> fetchNextCMSHomeHighlightsData() async {
+    if (_allHomeCMSHighlightsBlueprintData.length !=
+        _allHomeCMSHighlightsData.length) {
+      HomeCMSHighlightsModel _highlightsData =
+          await HomeCMSHighlightsDatabaseConnection().getHightlightsAllData(
+              data: _allHomeCMSHighlightsBlueprintData[
+                  _allHomeCMSHighlightsData.length]);
 
-    _allHomeCMSHighlightsData.add(_highlightsData);
-    notifyListeners();
+      _allHomeCMSHighlightsData.add(_highlightsData);
+      notifyListeners();
+    } else {
+      return;
+    }
   }
 }

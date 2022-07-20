@@ -17,6 +17,7 @@ import 'components/category_chips.dart';
 import 'components/product_description.dart';
 import 'components/product_images.dart';
 import 'components/product_variants.dart';
+import 'components/refund_policy.dart';
 import 'components/wishlist_button.dart';
 
 class ProductDescriptionScreen extends StatefulWidget {
@@ -260,52 +261,7 @@ class _ProductDescriptionScreenState extends State<ProductDescriptionScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenHeight! * .015),
-                    child: Container(
-                      padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardTheme.color,
-                        borderRadius: BorderRadius.circular(
-                            SizeConfig.screenHeight! * .01),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.screenHeight! * .015,
-                                vertical: SizeConfig.screenHeight! * .01),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.screenHeight! * .01),
-                                color: Theme.of(context).colorScheme.secondary),
-                            child: Text(
-                              "Refund Policy",
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.background,
-                                fontSize: SizeConfig.screenWidth! * .035,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.screenHeight! * .015),
-                          ListView.builder(
-                              shrinkWrap: true,
-                              primary: false,
-                              itemBuilder: (context, index) => Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("\u2022 "),
-                                      Expanded(
-                                          child: Text(index == 0
-                                              ? "10 Days Replacement Policy"
-                                              : "GST invoice available")),
-                                    ],
-                                  ),
-                              itemCount: 2),
-                        ],
-                      ),
-                    ),
+                    child: const ProductDescriptionRefundPolicy(),
                   ),
                   SizedBox(height: SizeConfig.screenHeight! * .015),
                 ],

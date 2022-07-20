@@ -14,6 +14,13 @@ class NotificationProvider extends ChangeNotifier {
   List<NotificationModel> get allNotificationData => _allNotificationData;
   bool get isDataLoaded => _isDataLoaded;
 
+  void resetData() {
+    _allNotificationData.clear();
+    _isDataLoaded = false;
+
+    notifyListeners();
+  }
+
   updateNotificationTimeData() {
     notifyListeners();
   }

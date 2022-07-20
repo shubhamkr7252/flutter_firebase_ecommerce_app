@@ -6,7 +6,7 @@ import 'package:flutter_remix/flutter_remix.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/upload_user_profile_image_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/authentication/login_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/authentication/welcome_screen.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/profile/components/custom_confirmation_bottom_sheet.dart';
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
@@ -100,7 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SizedBox(
                                       width: SizeConfig.screenWidth! * .5,
                                       child: Text(
-                                          userprovider.getCurrentUser != null
+                                          userprovider.getCurrentUser!
+                                                  .firstName!.isNotEmpty
                                               ? userprovider.getCurrentUser!
                                                       .firstName! +
                                                   (userprovider.getCurrentUser!
@@ -215,41 +216,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   backgroundColor: Colors.transparent,
                                   builder: (_) => CustomConfirmationBottomSheet(
                                         title: "Logout",
+                                        buttonColor:
+                                            Theme.of(context).colorScheme.error,
                                         description:
                                             "Logging out will clear all your data from this device and you will be redirected to login screen.",
-                                        positiveButtonOnTap: () async {
+                                        buttonOnTap: () async {
                                           await userprovider
                                               .userLogout(context);
                                         },
-                                        positiveButtonText: 'Logout',
+                                        buttonText: 'Logout',
                                       ));
                             } else {
                               NavigatorService.push(context,
-                                  page: const LoginScreen());
+                                  page: const WelcomeScreen());
                             }
                           }),
                 ),
-                // SizedBox(height: SizeConfig.screenHeight! * .015),
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: TextButton(
-                //       onPressed: () {
-                // showLicensePage(
-                //     context: context,
-                //     applicationName: "Flutter Firebase Ecommerce App",
-                //     applicationVersion: "1.0",
-                //     applicationLegalese: "Copyright Here",
-                //     applicationIcon: Padding(
-                //       padding: EdgeInsets.all(
-                //           SizeConfig.screenHeight! * .015),
-                //       child: Image.asset(
-                //         "assets/logo.png",
-                //         width: SizeConfig.screenWidth! * .1,
-                //       ),
-                //     ));
-                //       },
-                //       child: const Text("About")),
-                // ),
               ],
             ),
           ),

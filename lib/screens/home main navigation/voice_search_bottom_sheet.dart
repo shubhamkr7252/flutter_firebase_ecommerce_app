@@ -8,6 +8,8 @@ import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:flutter_speech/flutter_speech.dart';
 
+import '../../widgets/custom_bottom_sheet_close_button.dart';
+
 const languages = [
   Language('Francais', 'fr_FR'),
   Language('English', 'en_US'),
@@ -65,78 +67,94 @@ class _VoiceSearchBottomSheetState extends State<VoiceSearchBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
-      child: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              borderRadius:
-                  BorderRadius.circular(SizeConfig.screenHeight! * .01)),
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.screenHeight! * .015,
-              vertical: SizeConfig.screenHeight! * .055),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AvatarGlow(
-                animate: _isListening,
-                glowColor: Theme.of(context).colorScheme.primary,
-                endRadius: 75.0,
-                duration: const Duration(milliseconds: 2000),
-                repeatPauseDuration: const Duration(milliseconds: 100),
-                repeat: true,
-                child: InkWell(
-                  onTap: _speechRecognitionAvailable && !_isListening
-                      ? () => start()
-                      : null,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .inversePrimary
-                              .withOpacity(0.25),
-                          blurRadius: 2.0,
-                        ),
-                      ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CustomBottomSheetCloseButton(),
+        Padding(
+          padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
+          child: Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.25),
+                      blurRadius: 2.0,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(SizeConfig.screenHeight! * .03),
-                      child: Icon(
-                        _isListening
-                            ? FlutterRemix.mic_2_fill
-                            : FlutterRemix.mic_2_line,
-                        size: SizeConfig.screenWidth! * .075,
-                        color: Theme.of(context).colorScheme.background,
+                  ],
+                  color: Theme.of(context).colorScheme.background,
+                  borderRadius:
+                      BorderRadius.circular(SizeConfig.screenHeight! * .01)),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenHeight! * .015,
+                  vertical: SizeConfig.screenHeight! * .055),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AvatarGlow(
+                    animate: _isListening,
+                    glowColor: Theme.of(context).colorScheme.primary,
+                    endRadius: 75.0,
+                    duration: const Duration(milliseconds: 2000),
+                    repeatPauseDuration: const Duration(milliseconds: 100),
+                    repeat: true,
+                    child: InkWell(
+                      onTap: _speechRecognitionAvailable && !_isListening
+                          ? () => start()
+                          : null,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inversePrimary
+                                  .withOpacity(0.25),
+                              blurRadius: 2.0,
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding:
+                              EdgeInsets.all(SizeConfig.screenHeight! * .03),
+                          child: Icon(
+                            _isListening
+                                ? FlutterRemix.mic_2_fill
+                                : FlutterRemix.mic_2_line,
+                            size: SizeConfig.screenWidth! * .075,
+                            color: Theme.of(context).colorScheme.background,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(height: SizeConfig.screenHeight! * .015),
-              Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
-                  child: Text(transcription)),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     _buildButton(
-              //       onPressed: _isListening ? () => cancel() : null,
-              //       label: 'Cancel',
-              //     ),
-              //     _buildButton(
-              //       onPressed: _isListening ? () => stop() : null,
-              //       label: 'Stop',
-              //     ),
-              //   ],
-              // ),
-            ],
-          )),
+                  SizedBox(height: SizeConfig.screenHeight! * .015),
+                  Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
+                      child: Text(transcription)),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     _buildButton(
+                  //       onPressed: _isListening ? () => cancel() : null,
+                  //       label: 'Cancel',
+                  //     ),
+                  //     _buildButton(
+                  //       onPressed: _isListening ? () => stop() : null,
+                  //       label: 'Stop',
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+              )),
+        ),
+      ],
     );
   }
 

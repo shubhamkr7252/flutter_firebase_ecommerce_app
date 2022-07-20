@@ -3,15 +3,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/product%20description/product_description_screen.dart';
 import 'package:flutter_remix/flutter_remix.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/model/search_query.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/search_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/home/components/home_cms_highlights.dart';
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_bottom_sheet_drag_handle.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_loading_indicator.dart';
 
+import '../../widgets/custom_snackbar.dart';
+import '../home main navigation/voice_search_bottom_sheet.dart';
+import '../home/components/home_screen_product_tile.dart';
 import '../product listing/product_listing_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -97,69 +100,108 @@ class _SearchScreenState extends State<SearchScreen> {
         iconTheme:
             IconThemeData(color: Theme.of(context).colorScheme.background),
         title: Consumer<SearchProvider>(
-            builder: (context, searchprovider, _) => Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardTheme.color,
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.screenHeight! * .01),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(SizeConfig.screenWidth! * .025),
-                        child: Icon(
-                          FlutterRemix.search_2_fill,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: SizeConfig.screenWidth! * .06,
+            builder: (context, searchprovider, _) => Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardTheme.color,
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.screenHeight! * .01),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.screenWidth! * .025),
+                              child: Icon(
+                                FlutterRemix.search_2_fill,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: SizeConfig.screenWidth! * .06,
+                              ),
+                            ),
+                            SizedBox(width: SizeConfig.screenWidth! * .01),
+                            Expanded(
+                              child: TextFormField(
+                                focusNode: _searchBoxFocusNode,
+                                textAlignVertical: TextAlignVertical.center,
+                                controller: _controller,
+                                autofocus: true,
+                                onFieldSubmitted: (String value) async {
+                                  if (searchprovider.isDataLoaded == true) {
+                                    if (_controller.text.isNotEmpty) {
+                                      final searchQuery = SearchQueryModel()
+                                        ..queryText = _controller.text.trim();
+                                      await searchprovider
+                                          .modifySearchQueryList(searchQuery);
+
+                                      NavigatorService.push(context,
+                                          page: ProductListingScreen(
+                                              id: _controller.text.trim(),
+                                              name:
+                                                  'Search: "${_controller.text.trim().toLowerCase()}"',
+                                              type: "Search"));
+
+                                      if (_searchBoxFocusNode.hasFocus) {
+                                        _searchBoxFocusNode.unfocus();
+                                      }
+                                    } else {
+                                      _searchBoxFocusNode.requestFocus();
+                                    }
+                                  }
+                                },
+                                style: TextStyle(
+                                    fontSize: SizeConfig.screenWidth! * .04),
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                    hintText: "Search...",
+                                    hintStyle: TextStyle(
+                                        fontFamily: "Poppins",
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withOpacity(0.5),
+                                        fontSize:
+                                            SizeConfig.screenWidth! * .04)),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: SizeConfig.screenWidth! * .01),
-                      Expanded(
-                        child: TextFormField(
-                          focusNode: _searchBoxFocusNode,
-                          textAlignVertical: TextAlignVertical.center,
-                          controller: _controller,
-                          autofocus: true,
-                          onFieldSubmitted: (String value) async {
-                            if (searchprovider.isDataLoaded == true) {
-                              if (_controller.text.isNotEmpty) {
-                                final searchQuery = SearchQueryModel()
-                                  ..queryText = _controller.text.trim();
-                                await searchprovider
-                                    .modifySearchQueryList(searchQuery);
-
-                                NavigatorService.push(context,
-                                    page: ProductListingScreen(
-                                        id: _controller.text.trim(),
-                                        name:
-                                            'Search: "${_controller.text.trim().toLowerCase()}"',
-                                        type: "Search"));
-
-                                if (_searchBoxFocusNode.hasFocus) {
-                                  _searchBoxFocusNode.unfocus();
-                                }
-                              } else {
-                                _searchBoxFocusNode.requestFocus();
-                              }
+                    ),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                      ),
+                      child: IconButton(
+                          onPressed: () async {
+                            await Permission.microphone.request();
+                            PermissionStatus status =
+                                await Permission.microphone.status;
+                            if (status.isDenied) {
+                              CustomSnackbar.showSnackbar(context,
+                                  title: "Microphone permission denied",
+                                  type: 2,
+                                  description:
+                                      "Please enable microphone permission to use voice search");
+                            } else {
+                              showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  builder: (context) =>
+                                      const VoiceSearchBottomSheet());
                             }
                           },
-                          style: TextStyle(
-                              fontSize: SizeConfig.screenWidth! * .04),
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              isDense: true,
-                              hintText: "Search...",
-                              hintStyle: TextStyle(
-                                  fontFamily: "Poppins",
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.5),
-                                  fontSize: SizeConfig.screenWidth! * .04)),
-                        ),
-                      ),
-                    ],
-                  ),
+                          icon: Icon(
+                            FlutterRemix.mic_2_fill,
+                            size: SizeConfig.screenWidth! * .06,
+                            color: Theme.of(context).colorScheme.background,
+                          )),
+                    ),
+                  ],
                 )),
       ),
       body: SingleChildScrollView(

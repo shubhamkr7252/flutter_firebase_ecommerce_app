@@ -122,11 +122,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       context: context,
                       builder: (context) => CustomConfirmationBottomSheet(
                           title: "Clear Notifications?",
-                          positiveButtonOnTap: () async {
+                          buttonColor: Theme.of(context).colorScheme.error,
+                          buttonOnTap: () async {
                             await notificationprovider.clearNotification(
                                 userId: widget.userId);
                           },
-                          positiveButtonText: "Yes"));
+                          buttonText: "Yes"));
                 },
                 child: Icon(
                   FlutterRemix.delete_bin_2_fill,
