@@ -62,6 +62,7 @@ colorful_safe_area | https://pub.dev/packages/colorful_safe_area
 country_calling_code_picker | https://pub.dev/packages/country_calling_code_picker
 dio | https://pub.dev/packages/dio
 dynamic_height_grid_view | https://pub.dev/packages/dynamic_height_grid_view
+email_auth | https://pub.dev/packages/email_auth
 firebase_auth | https://pub.dev/packages/firebase_auth
 firebase_core | https://pub.dev/packages/firebase_core
 firebase_storage | https://pub.dev/packages/firebase_storage
