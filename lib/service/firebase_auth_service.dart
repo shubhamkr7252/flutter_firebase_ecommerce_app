@@ -1,68 +1,84 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/authentication/welcome_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_snackbar.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class FirebaseAuthService {
-  static Future<Map<String, dynamic>?> login(BuildContext context,
-      {required String email, required String password}) async {
-    Map<String, dynamic> userData = {};
+  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static final OneSignal _oneSignalStatus = OneSignal.shared;
 
-    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static Future<void> requestOTP(
+    BuildContext context, {
+    required String phoneNumber,
+    required Function(String) onVerificationRecieved,
+    required Duration timeout,
+    required AsyncCallback afterVerificationRecievedCallback,
+  }) async {
+    await _firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {},
+      verificationFailed: (FirebaseAuthException e) {
+        CustomSnackbar.showSnackbar(context, title: e.message!, type: 2);
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        await onVerificationRecieved(verificationId);
+        await afterVerificationRecievedCallback();
 
+        log(verificationId);
+      },
+      timeout: timeout,
+      codeAutoRetrievalTimeout: (String verificationId) {
+        onVerificationRecieved(verificationId);
+
+        log("timed out");
+      },
+    );
+  }
+
+  static Future<Map<String, dynamic>?> phoneLogin(BuildContext context,
+      {required String verificationId, required String smsCode}) async {
+    OSDeviceState? _token = await _oneSignalStatus.getDeviceState();
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential _userCreds =
+          await FirebaseAuth.instance.signInWithCredential(
+        PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: smsCode,
+        ),
+      );
 
-      final OSDeviceState? _oneSignalStatus =
-          await OneSignal.shared.getDeviceState();
-
-      userData["uid"] = _firebaseAuth.currentUser!.uid;
-      userData["token"] = _oneSignalStatus!.userId!;
-
-      return userData;
+      if (_userCreds.user != null) {
+        Map<String, dynamic> userData = {};
+        userData["uid"] = _userCreds.user!.uid;
+        userData["phone"] = _userCreds.user!.phoneNumber;
+        userData["token"] = _token!.userId!;
+        return userData;
+      }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        CustomSnackbar.showSnackbar(context,
-            content: "No user found for that email.");
-      } else if (e.code == 'wrong-password') {
-        CustomSnackbar.showSnackbar(context,
-            content: "Wrong password provided for that user.");
+      if (e.code == "invalid-verification-code") {
+        CustomSnackbar.showSnackbar(
+          context,
+          title: "Invalid OTP",
+          type: 2,
+          position: ToastPosition.top,
+        );
       }
     } catch (e) {
       log(e.toString());
     }
-
     return null;
   }
 
-  static Future<Map<String, dynamic>?> createUser(BuildContext context,
-      {required String email, required String password}) async {
-    Map<String, dynamic> userData = {};
+  static Future<void> deleteAccount(BuildContext context) async {
+    await _firebaseAuth.currentUser!.delete();
 
-    FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-    OSDeviceState? _oneSignalStatus = await OneSignal.shared.getDeviceState();
-
-    try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-
-      userData["uid"] = _firebaseAuth.currentUser!.uid;
-      userData["token"] = _oneSignalStatus!.userId!;
-
-      return userData;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        CustomSnackbar.showSnackbar(context,
-            content: "The password provided is too weak.");
-      } else if (e.code == 'email-already-in-use') {
-        CustomSnackbar.showSnackbar(context,
-            content: "The account already exists for that email.");
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
+    Future.delayed(const Duration(seconds: 0)).then((value) {
+      NavigatorService.pushReplaceUntil(context, page: const WelcomeScreen());
+    });
   }
 }

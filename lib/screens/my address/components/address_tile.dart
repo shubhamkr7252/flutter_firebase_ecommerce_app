@@ -100,8 +100,6 @@ class AddressTile extends StatelessWidget {
                       children: [
                         Flexible(
                           child: CustomButtonA(
-                            borderRadius: BorderRadius.circular(
-                                SizeConfig.screenHeight! * .01),
                             buttonText: "Edit",
                             textColor: Theme.of(context).colorScheme.primary,
                             onPress: () async {
@@ -114,8 +112,6 @@ class AddressTile extends StatelessWidget {
                         SizedBox(width: SizeConfig.screenHeight! * .015),
                         Flexible(
                           child: CustomButtonA(
-                            borderRadius: BorderRadius.circular(
-                                SizeConfig.screenHeight! * .01),
                             buttonText: "Remove",
                             textColor: Theme.of(context).colorScheme.error,
                             onPress: () async {

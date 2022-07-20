@@ -17,6 +17,13 @@ class OrderProvider extends ChangeNotifier {
   List<UserOrderModel> get allOrdersData => _ordersData;
   bool get isDataLoaded => _isDataLoaded;
 
+  void resetData() {
+    _ordersData.clear();
+    _isDataLoaded = false;
+
+    notifyListeners();
+  }
+
   Future<void> fetchOrdersData({required String userId}) async {
     _ordersData =
         await UserOrderDatabaseConnection().fetchUserOrdersData(userId: userId);

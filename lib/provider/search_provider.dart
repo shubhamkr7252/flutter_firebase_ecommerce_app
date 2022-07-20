@@ -14,6 +14,14 @@ class SearchProvider extends ChangeNotifier {
       _allPreviousVisitedProducts;
   bool get isDataLoaded => _isDataLoaded;
 
+  void resetData() {
+    _allPreviousVisitedProducts.clear();
+    _allSearchQueryData.clear();
+    _isDataLoaded = false;
+
+    notifyListeners();
+  }
+
   Future<void> modifySearchQueryList(SearchQueryModel query) async {
     if (_allSearchQueryData
         .where((element) => element.queryText == query.queryText!.toLowerCase())

@@ -12,6 +12,13 @@ class WishlistProvider extends ChangeNotifier {
   List<ProductListModel> get allWishlistProducts => _allWishlistProducts;
   bool get isDataLoaded => _isDataLoaded;
 
+  void resetData() {
+    _allWishlistProducts.clear();
+    _isDataLoaded = false;
+
+    notifyListeners();
+  }
+
   Future<void> fetchWishlistData({required String userId}) async {
     await UserWishlistDatabaseConnection.getUserWishlistData(userId: userId)
         .then((wishlistData) async {

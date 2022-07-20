@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/authentication/login_screen.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/model/product.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/wishlist_provider.dart';
-import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom%20loader/custom_loader.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_snackbar.dart';
@@ -67,27 +65,23 @@ class _WishlistButtonState extends State<WishlistButton> {
 
                       if (wishlistprovider.allWishlistProducts
                           .contains(widget.data)) {
-                        CustomSnackbar.showSnackbar(context,
-                            floating: true, content: "Item added to wishlist");
+                        CustomSnackbar.showSnackbar(
+                          context,
+                          title: "Item added to wishlist",
+                          type: 1,
+                        );
                       } else {
                         CustomSnackbar.showSnackbar(
                           context,
-                          content: "Item removed from wishlist",
-                          floating: true,
-                          bgColor: Theme.of(context).colorScheme.error,
+                          title: "Item removed from wishlist",
+                          type: 2,
                         );
                       }
                     } else {
                       CustomSnackbar.showSnackbar(
                         context,
-                        content: "Please login to use wishlist",
-                        duration: const Duration(seconds: 3),
-                        action: SnackBarAction(
-                            label: "Login",
-                            onPressed: () {
-                              NavigatorService.push(context,
-                                  page: const LoginScreen());
-                            }),
+                        title: "Please login to use wishlist",
+                        type: 2,
                       );
                     }
                   },

@@ -15,12 +15,16 @@ class CartProvider extends ChangeNotifier {
 
   UserAddressObject? _defaultCartDeliveryAddress;
 
-  Future<void> resetData({required String userId}) async {
+  Future<void> resetData({String? userId}) async {
     _discount = 0;
     _totalAmountPaid = 0;
     _cartData!.products!.clear();
 
-    await UserCartDatabaseConnection().clearCartData(userId: userId);
+    if (userId != null) {
+      await UserCartDatabaseConnection().clearCartData(userId: userId);
+    } else {
+      _isDataLoaded = false;
+    }
 
     notifyListeners();
   }

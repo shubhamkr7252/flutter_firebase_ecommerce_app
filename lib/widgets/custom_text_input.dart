@@ -4,22 +4,24 @@ import 'package:flutter/services.dart';
 import '../theme/size.dart';
 
 class CustomTextInput extends StatelessWidget {
-  const CustomTextInput(
-      {Key? key,
-      this.controller,
-      this.inputAction,
-      required this.hintTxt,
-      this.obscureText = false,
-      this.onSave,
-      this.label,
-      this.node,
-      this.capitalization = TextCapitalization.none,
-      required this.validator,
-      this.isNumberInput = false,
-      this.formatters,
-      this.suffixIcon,
-      this.maxLength})
-      : super(key: key);
+  const CustomTextInput({
+    Key? key,
+    this.controller,
+    this.inputAction,
+    required this.hintTxt,
+    this.obscureText = false,
+    this.onSave,
+    this.node,
+    this.capitalization = TextCapitalization.none,
+    required this.validator,
+    this.isNumberInput = false,
+    this.suffixIcon,
+    this.maxLength,
+    this.isSpaceDenied,
+    this.prefixIcon,
+    this.autoFocus = false,
+    this.hideTitle = false,
+  }) : super(key: key);
 
   final TextEditingController? controller;
   final TextInputAction? inputAction;
@@ -28,45 +30,68 @@ class CustomTextInput extends StatelessWidget {
   final bool obscureText;
   final String hintTxt;
   final Function? onSave;
-  final String? label;
   final FocusNode? node;
   final String? Function(String?) validator;
   final TextCapitalization capitalization;
-  final List<TextInputFormatter>? formatters;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final int? maxLength;
+  final bool? isSpaceDenied;
+  final bool autoFocus;
+  final bool hideTitle;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: SizeConfig.screenHeight! * .015),
-        Text(
-          hintTxt,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
+        if (hideTitle == false)
+          SizedBox(height: SizeConfig.screenHeight! * .015),
+        if (hideTitle == false)
+          Text(
+            hintTxt,
+            style: TextStyle(
+              fontSize: SizeConfig.screenWidth! * .0375,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
-        SizedBox(height: SizeConfig.screenHeight! * .01),
+        if (hideTitle == false)
+          SizedBox(height: SizeConfig.screenHeight! * .01),
         TextFormField(
+          autofocus: autoFocus,
           onEditingComplete: onSave != null
               ? () {
                   onSave!();
                 }
               : null,
           textInputAction: inputAction,
-          inputFormatters: formatters,
+          inputFormatters: [
+            if (isSpaceDenied == true)
+              FilteringTextInputFormatter.deny(RegExp(r'\s')),
+          ],
           textCapitalization: capitalization,
           controller: controller,
           focusNode: node,
           maxLength: maxLength,
+          style: TextStyle(fontSize: SizeConfig.screenWidth! * .0375),
           decoration: InputDecoration(
+              hintText: hideTitle ? hintTxt : null,
+              hintStyle: TextStyle(
+                fontSize: SizeConfig.screenWidth! * .0375,
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.25),
+              ),
               counterText: "",
+              prefixIcon: Padding(
+                  padding: prefixIcon != null
+                      ? EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenHeight! * .0075)
+                      : EdgeInsets.only(left: SizeConfig.screenHeight! * .0075),
+                  child: prefixIcon),
+              prefixIconConstraints:
+                  const BoxConstraints(minWidth: 0, minHeight: 0),
               suffixIcon: suffixIcon,
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenHeight! * .015),
+                  horizontal: SizeConfig.screenHeight! * .0075),
               enabledBorder: OutlineInputBorder(
                 borderRadius:
                     BorderRadius.circular(SizeConfig.screenHeight! * .01),

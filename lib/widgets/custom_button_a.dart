@@ -13,7 +13,6 @@ class CustomButtonA extends StatefulWidget {
     this.fontSize,
     this.textColor,
     this.height,
-    this.borderRadius,
     this.icon,
   }) : super(key: key);
 
@@ -24,7 +23,6 @@ class CustomButtonA extends StatefulWidget {
   final double? height;
   final double? fontSize;
   final Color? textColor;
-  final BorderRadius? borderRadius;
 
   @override
   State<CustomButtonA> createState() => _CustomButtonAState();
@@ -36,7 +34,7 @@ class _CustomButtonAState extends State<CustomButtonA> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.screenWidth!)),
-      height: widget.height ?? SizeConfig.screenWidth! * .115,
+      height: widget.height ?? SizeConfig.screenWidth! * .135,
       width: widget.width ?? SizeConfig.screenWidth!,
       child: TapDebouncer(
         onTap: () async {
@@ -46,17 +44,19 @@ class _CustomButtonAState extends State<CustomButtonA> {
             OutlinedButton(
           onPressed: onTap,
           style: ButtonStyle(
-              side: MaterialStateProperty.all(BorderSide(
-                width: 2.25,
-                color:
-                    widget.textColor ?? Theme.of(context).colorScheme.primary,
-              )),
-              backgroundColor: MaterialStateProperty.all(
-                  (widget.textColor ?? Theme.of(context).colorScheme.primary)
-                      .withOpacity(0.075)),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: widget.borderRadius ??
-                      BorderRadius.circular(SizeConfig.screenHeight! * .01)))),
+            side: MaterialStateProperty.all(BorderSide(
+              width: 2.25,
+              color: widget.textColor ?? Theme.of(context).colorScheme.primary,
+            )),
+            backgroundColor: MaterialStateProperty.all(
+                (widget.textColor ?? Theme.of(context).colorScheme.primary)
+                    .withOpacity(0.075)),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.screenWidth!),
+              ),
+            ),
+          ),
           child: onTap == null
               ? CustomLoader(
                   color:
@@ -71,7 +71,7 @@ class _CustomButtonAState extends State<CustomButtonA> {
                               Theme.of(context).colorScheme.primary,
                           size: SizeConfig.screenWidth! * .06),
                     if (widget.icon != null)
-                      SizedBox(width: SizeConfig.screenWidth! * .015),
+                      SizedBox(width: SizeConfig.screenWidth! * .02),
                     Flexible(
                       child: Text(widget.buttonText,
                           style: TextStyle(

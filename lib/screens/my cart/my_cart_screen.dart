@@ -3,7 +3,6 @@ import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/place_order_sce
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_snackbar.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/empty_data_widget.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/model/product.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/cart_provider.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_firebase_ecommerce_app/screens/my%20cart/components/mone
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom%20loader/custom_loader.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_scaffold.dart';
-import '../../widgets/custom_button_a.dart';
 import 'components/cart_product_tile.dart';
 
 class MyCartScreen extends StatefulWidget {
@@ -134,7 +132,8 @@ class _MyCartScreenState extends State<MyCartScreen> {
                             buttonOnTap: () async {
                               if (cartprovider.getCartDeliveryAddress == null) {
                                 return CustomSnackbar.showSnackbar(context,
-                                    content:
+                                    type: 2,
+                                    title:
                                         "Please add an address to continue.");
                               }
                               NavigatorService.push(context,
@@ -178,98 +177,5 @@ class _MyCartScreenState extends State<MyCartScreen> {
             style: TextStyle(fontSize: SizeConfig.screenHeight! * .02),
           ));
         }));
-  }
-}
-
-class CartResponseWidget extends StatelessWidget {
-  const CartResponseWidget({
-    Key? key,
-    required this.title,
-    required this.description,
-    required this.lottieSrc,
-    required this.buttonText,
-    required this.buttonOnTap,
-    this.negativeButtonOnTap,
-    this.negativeButtonText,
-  }) : super(key: key);
-
-  final String title;
-  final String description;
-  final String lottieSrc;
-  final String buttonText;
-  final Function buttonOnTap;
-  final Function? negativeButtonOnTap;
-  final String? negativeButtonText;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(SizeConfig.screenHeight! * .015),
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.screenHeight! * .01),
-            color: Theme.of(context).colorScheme.background),
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.screenHeight! * .015),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: SizeConfig.screenWidth! * .065),
-            LottieBuilder.asset(
-              lottieSrc,
-              repeat: false,
-              width: SizeConfig.screenWidth! * .55,
-              height: SizeConfig.screenWidth! * .55,
-              onLoaded: (composite) async {},
-            ),
-            SizedBox(height: SizeConfig.screenWidth! * .045),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: SizeConfig.screenWidth! * .0415),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenHeight! * .015),
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: SizeConfig.screenWidth! * .0335),
-              ),
-            ),
-            SizedBox(height: SizeConfig.screenWidth! * .075),
-            Row(
-              children: [
-                if (negativeButtonText != null)
-                  Flexible(
-                    child: CustomButtonA(
-                        buttonText: negativeButtonText!,
-                        textColor: Theme.of(context).colorScheme.error,
-                        onPress: () {
-                          if (negativeButtonOnTap == null) {
-                            Navigator.of(context).pop();
-                          } else {
-                            negativeButtonOnTap!();
-                          }
-                        }),
-                  ),
-                if (negativeButtonText != null)
-                  SizedBox(width: SizeConfig.screenHeight! * .015),
-                Flexible(
-                  child: CustomButtonA(
-                      buttonText: buttonText,
-                      onPress: () async {
-                        await buttonOnTap();
-                      }),
-                ),
-              ],
-            ),
-            SizedBox(height: SizeConfig.screenHeight! * .015),
-          ],
-        ),
-      ),
-    );
   }
 }

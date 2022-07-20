@@ -16,4 +16,12 @@ class HiveBoxes {
       Hive.registerAdapter<SearchQueryModel>(SearchQueryModelAdapter());
     }
   }
+
+  static Future<void> clearData() async {
+    await Hive.openBox<ProductListModel>("previousVisitedProductList");
+    await previousVisitedProductListBox().clear();
+    await Hive.openBox<SearchQueryModel>("previousSearchTextListBox");
+    await previousSearchTextListBox().clear();
+    await Hive.deleteFromDisk();
+  }
 }

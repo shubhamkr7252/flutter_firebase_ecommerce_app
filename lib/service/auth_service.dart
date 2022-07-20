@@ -1,6 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_ecommerce_app/screens/authentication/login_screen.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/authentication/welcome_screen.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_firebase_ecommerce_app/screens/home%20main%20navigation/home_main_navigation.dart';
@@ -13,11 +15,14 @@ class AuthService {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
+      log("User Init: ${currentUser.uid}");
+
       OSDeviceState? _oneSignalStatus = await OneSignal.shared.getDeviceState();
+      await Future.delayed(const Duration(seconds: 1));
 
       UserProvider _provider = Provider.of(context, listen: false);
       bool _isUserInDatabase = await _provider.init(
-          userId: currentUser.uid, token: _oneSignalStatus!.userId);
+          userId: currentUser.uid, token: _oneSignalStatus!.userId!);
 
       if (_isUserInDatabase) {
         HiveBoxes.registerAdapters();
@@ -30,12 +35,13 @@ class AuthService {
         await FirebaseAuth.instance.signOut();
 
         Future.delayed(const Duration(seconds: 0)).then((_) {
-          NavigatorService.pushReplaceUntil(context, page: const LoginScreen());
+          NavigatorService.pushReplaceUntil(context,
+              page: const WelcomeScreen());
         });
       }
     } else {
       Future.delayed(const Duration(seconds: 0)).then((_) {
-        NavigatorService.pushReplaceUntil(context, page: const LoginScreen());
+        NavigatorService.pushReplaceUntil(context, page: const WelcomeScreen());
       });
     }
   }
@@ -43,6 +49,6 @@ class AuthService {
   static Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
 
-    NavigatorService.pushReplaceUntil(context, page: const LoginScreen());
+    NavigatorService.pushReplaceUntil(context, page: const WelcomeScreen());
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ecommerce_app/service/navigator_service.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -13,9 +14,9 @@ import '../../service/razorpay_integration.dart';
 import '../../theme/size.dart';
 import '../product listing/components/product_list_tile.dart';
 import 'components/cart_bottom_price_container.dart';
+import 'components/cart_response_widget.dart';
 import 'components/cart_top_address_widget.dart';
 import 'components/money_saved_tile.dart';
-import 'my_cart_screen.dart';
 import 'order_placed_success_screen.dart';
 
 class PlaceOrderScreen extends StatefulWidget {
@@ -81,8 +82,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
         builder: (context) => CartResponseWidget(
               title: "Oops! Payment failed",
               description: "Please retry or use another payment method.",
-              lottieSrc: "assets/lottie_files/error_lottie.json",
-              negativeButtonText: "Cancel",
+              icon: FlutterRemix.error_warning_fill,
+              iconColor: Theme.of(context).colorScheme.error,
               buttonText: "Retry",
               buttonOnTap: () async {
                 Navigator.of(context).pop();

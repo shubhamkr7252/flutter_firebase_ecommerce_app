@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_firebase_ecommerce_app/provider/notification_provider.dart';
+import 'package:flutter_firebase_ecommerce_app/screens/profile/components/custom_confirmation_bottom_sheet.dart';
 import 'package:flutter_firebase_ecommerce_app/theme/size.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_loading_indicator.dart';
 import 'package:flutter_remix/flutter_remix.dart';
@@ -117,8 +118,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 backgroundColor: Theme.of(context).colorScheme.error,
                 elevation: 0,
                 onPressed: () async {
-                  await notificationprovider.clearNotification(
-                      userId: widget.userId);
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) => CustomConfirmationBottomSheet(
+                          title: "Clear Notifications?",
+                          buttonColor: Theme.of(context).colorScheme.error,
+                          buttonOnTap: () async {
+                            await notificationprovider.clearNotification(
+                                userId: widget.userId);
+                          },
+                          buttonText: "Yes"));
                 },
                 child: Icon(
                   FlutterRemix.delete_bin_2_fill,

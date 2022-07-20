@@ -29,7 +29,7 @@ class ProductDescription extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(SizeConfig.screenHeight! * .01),
-                  color: Theme.of(context).colorScheme.secondary),
+                  color: Theme.of(context).colorScheme.primary),
               child: Text(
                 "Product Description",
                 style: TextStyle(
