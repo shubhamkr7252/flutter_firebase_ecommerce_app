@@ -130,6 +130,9 @@ Future<Country?> showCountryPickerSheet(BuildContext context,
                     ),
                     Expanded(
                       child: CountryPickerWidget(
+                        itemTextStyle: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * .0345,
+                        ),
                         onSelected: (country) =>
                             Navigator.of(context).pop(country),
                       ),

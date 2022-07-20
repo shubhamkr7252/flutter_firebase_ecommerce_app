@@ -234,15 +234,6 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
                                 ),
                               ),
                             ),
-                            // ClipRRect(
-                            //   borderRadius: BorderRadius.circular(
-                            //       MediaQuery.of(context).size.width * .015),
-                            //   child: Image.asset(
-                            //     _filteredList[index].flag,
-                            //     package: countryCodePackageName,
-                            //     width: widget.flagIconSize,
-                            //   ),
-                            // ),
                             SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * .015),
