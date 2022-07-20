@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:flutter_firebase_ecommerce_app/model/order.dart';
-import 'package:flutter_firebase_ecommerce_app/provider/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RazorpayIntegration {
@@ -32,14 +30,15 @@ class RazorpayIntegration {
     return null;
   }
 
-  Future<void> makePayment(BuildContext context,
-      {required double totalAmount,
-      required String orderId,
-      required Razorpay razorpay,
-      int? timeout,
-      String? contact,
-      String? email}) async {
-    UserProvider _userProvider = Provider.of(context, listen: false);
+  Future<void> makePayment(
+    BuildContext context, {
+    required double totalAmount,
+    required String orderId,
+    required Razorpay razorpay,
+    int? timeout,
+    required String contact,
+    required String email,
+  }) async {
     try {
       Map<String, dynamic> _options = {
         'key': dotenv.env['RAZORPAY_API_ID'],
@@ -52,8 +51,8 @@ class RazorpayIntegration {
         'description': '',
         'timeout': timeout ?? 600,
         'prefill': {
-          'contact': contact ?? "9060722872",
-          'email': email ?? _userProvider.getCurrentUser!.email,
+          'contact': contact,
+          'email': email,
         }
       };
 

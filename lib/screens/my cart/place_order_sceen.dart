@@ -44,12 +44,15 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
   late ValueNotifier<int> _currentTab;
 
   late Razorpay _razorpay;
-
   late String? _globalOrderId;
+
+  late UserProvider _userProvider;
 
   @override
   void initState() {
     _currentTab = ValueNotifier<int>(0);
+
+    _userProvider = Provider.of(context, listen: false);
 
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -87,10 +90,16 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
               buttonText: "Retry",
               buttonOnTap: () async {
                 Navigator.of(context).pop();
-                await RazorpayIntegration().makePayment(context,
-                    totalAmount: (widget.totalAmountPaid * 100).toDouble(),
-                    orderId: _globalOrderId!,
-                    razorpay: _razorpay);
+                await RazorpayIntegration().makePayment(
+                  context,
+                  totalAmount: (widget.totalAmountPaid * 100).toDouble(),
+                  orderId: _globalOrderId!,
+                  razorpay: _razorpay,
+                  contact: _userProvider.getCurrentUser!.phoneNumber!,
+                  email: _userProvider.getCurrentUser!.email!.isEmpty
+                      ? "test@git.com"
+                      : _userProvider.getCurrentUser!.email!,
+                );
               },
             ));
   }
@@ -145,11 +154,16 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen>
                     if (orderReponseData != null) {
                       _globalOrderId = orderReponseData.id!;
 
-                      await RazorpayIntegration().makePayment(context,
-                          totalAmount:
-                              (widget.totalAmountPaid * 100).toDouble(),
-                          orderId: orderReponseData.id!,
-                          razorpay: _razorpay);
+                      await RazorpayIntegration().makePayment(
+                        context,
+                        totalAmount: (widget.totalAmountPaid * 100).toDouble(),
+                        orderId: orderReponseData.id!,
+                        razorpay: _razorpay,
+                        contact: userprovider.getCurrentUser!.phoneNumber!,
+                        email: userprovider.getCurrentUser!.email!.isEmpty
+                            ? "test@git.com"
+                            : userprovider.getCurrentUser!.email!,
+                      );
                     }
                   },
                   buttonText: "Pay Now"),

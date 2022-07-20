@@ -40,7 +40,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     _userProvider = Provider.of(context, listen: false);
     _firstNameController.text = _userProvider.getCurrentUser!.firstName!;
-    _lastNameController.text = _userProvider.getCurrentUser!.lastName ?? "";
+    _lastNameController.text = _userProvider.getCurrentUser!.lastName!;
+    _emailController.text = _userProvider.getCurrentUser!.email!;
     super.initState();
   }
 
