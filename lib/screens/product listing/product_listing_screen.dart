@@ -54,6 +54,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
       title: widget.name,
       appBarActions: [
         IconButton(
+            splashRadius: SizeConfig.screenWidth! * .05,
             onPressed: () {
               NavigatorService.push(
                 context,
@@ -66,6 +67,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
               FlutterRemix.shopping_bag_2_fill,
             )),
         IconButton(
+            splashRadius: SizeConfig.screenWidth! * .05,
             onPressed: () {
               if (widget.type == "Search") {
                 Navigator.of(context).pop();

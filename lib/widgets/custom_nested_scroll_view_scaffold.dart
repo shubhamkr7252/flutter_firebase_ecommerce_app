@@ -63,6 +63,7 @@ class _CustomNestedScrollViewScaffoldState
                 ? [
                     SliverAppBar(
                         leading: IconButton(
+                            splashRadius: SizeConfig.screenWidth! * .05,
                             onPressed: () {
                               Navigator.of(context).pop();
                             },

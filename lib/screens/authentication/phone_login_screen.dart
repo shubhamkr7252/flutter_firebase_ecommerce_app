@@ -81,6 +81,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                   : Brightness.dark,
         ),
         leading: IconButton(
+            splashRadius: SizeConfig.screenWidth! * .05,
             onPressed: () {
               Navigator.of(context).pop();
             },

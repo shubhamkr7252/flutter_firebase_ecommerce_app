@@ -66,12 +66,12 @@ class _MainState extends State<Main> {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
-      child: OKToast(
-        child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: (overscroll) {
-            overscroll.disallowIndicator();
-            return true;
-          },
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overscroll) {
+          overscroll.disallowIndicator();
+          return true;
+        },
+        child: OKToast(
           child: MaterialApp(
             theme: LightTheme.data(context),
             darkTheme: DarkTheme.data(context),

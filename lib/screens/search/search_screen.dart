@@ -176,6 +176,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         highlightColor: Colors.transparent,
                       ),
                       child: IconButton(
+                          splashRadius: SizeConfig.screenWidth! * .05,
                           onPressed: () async {
                             await Permission.microphone.request();
                             PermissionStatus status =

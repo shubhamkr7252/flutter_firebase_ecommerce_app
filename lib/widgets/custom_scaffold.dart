@@ -55,6 +55,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                     color: Theme.of(context).colorScheme.background,
                   ),
                   leading: IconButton(
+                      splashRadius: SizeConfig.screenWidth! * .05,
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
