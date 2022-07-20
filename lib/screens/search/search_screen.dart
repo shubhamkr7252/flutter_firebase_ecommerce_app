@@ -31,7 +31,6 @@ class _SearchScreenState extends State<SearchScreen> {
   late FocusNode _searchBoxFocusNode;
 
   late SearchProvider _provider;
-
   late ScrollController _scrollController;
 
   @override
@@ -88,6 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         automaticallyImplyLeading: true,
         leading: IconButton(
+            splashRadius: SizeConfig.screenWidth! * .05,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -170,38 +170,32 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                      ),
-                      child: IconButton(
-                          splashRadius: SizeConfig.screenWidth! * .05,
-                          onPressed: () async {
-                            await Permission.microphone.request();
-                            PermissionStatus status =
-                                await Permission.microphone.status;
-                            if (status.isDenied) {
-                              CustomSnackbar.showSnackbar(context,
-                                  title: "Microphone permission denied",
-                                  type: 2,
-                                  description:
-                                      "Please enable microphone permission to use voice search");
-                            } else {
-                              showModalBottomSheet(
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  isScrollControlled: true,
-                                  builder: (context) =>
-                                      const VoiceSearchBottomSheet());
-                            }
-                          },
-                          icon: Icon(
-                            FlutterRemix.mic_2_fill,
-                            size: SizeConfig.screenWidth! * .06,
-                            color: Theme.of(context).colorScheme.background,
-                          )),
-                    ),
+                    IconButton(
+                        splashRadius: SizeConfig.screenWidth! * .05,
+                        onPressed: () async {
+                          await Permission.microphone.request();
+                          PermissionStatus status =
+                              await Permission.microphone.status;
+                          if (status.isDenied) {
+                            CustomSnackbar.showSnackbar(context,
+                                title: "Microphone permission denied",
+                                type: 2,
+                                description:
+                                    "Please enable microphone permission to use voice search");
+                          } else {
+                            showModalBottomSheet(
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                isScrollControlled: true,
+                                builder: (context) =>
+                                    const VoiceSearchBottomSheet());
+                          }
+                        },
+                        icon: Icon(
+                          FlutterRemix.mic_2_fill,
+                          size: SizeConfig.screenWidth! * .06,
+                          color: Theme.of(context).colorScheme.background,
+                        )),
                   ],
                 )),
       ),

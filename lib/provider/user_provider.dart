@@ -86,8 +86,10 @@ class UserProvider extends ChangeNotifier {
   }
 
   ///function to update user data
-  Future<void> updateUserNameDataAndImage(BuildContext context,
-      {required String firstName, required String? lastName}) async {
+  Future<void> updateUserData(BuildContext context,
+      {required String firstName,
+      required String? lastName,
+      required String email}) async {
     _isLoading = true;
     notifyListeners();
 
@@ -103,6 +105,10 @@ class UserProvider extends ChangeNotifier {
       _currentUser!.lastName = lastName.toCapitalized();
       _isDataChanged = true;
     }
+    if (email.isNotEmpty && email != _currentUser!.email) {
+      _currentUser!.email = email.toLowerCase();
+      _isDataChanged = true;
+    }
 
     UploadUserProfileImageProvider _provider =
         Provider.of(context, listen: false);
@@ -111,8 +117,7 @@ class UserProvider extends ChangeNotifier {
     }
 
     if (_isDataChanged) {
-      await UserDatabaseConnection()
-          .updateUserNameData(userData: _currentUser!);
+      await UserDatabaseConnection().updateUserData(userData: _currentUser!);
     }
 
     _isLoading = false;

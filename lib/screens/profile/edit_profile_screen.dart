@@ -10,6 +10,7 @@ import 'package:flutter_firebase_ecommerce_app/extension/string_casing_extension
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_button_a.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_scaffold.dart';
 import 'package:flutter_firebase_ecommerce_app/widgets/custom_text_input.dart';
+import 'package:validators/validators.dart';
 import '../../theme/size.dart';
 import 'components/edit_profile_image_selection_bottom_sheet.dart';
 
@@ -23,6 +24,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
+  late TextEditingController _emailController;
 
   late GlobalKey<FormState> _formKey;
 
@@ -32,6 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
+    _emailController = TextEditingController();
 
     _formKey = GlobalKey<FormState>();
 
@@ -45,6 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -52,10 +56,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
       builder: (context, userprovider, _) => CustomScaffold(
+        resizeToAvoidBottomInset: true,
         title: "Edit Profile",
         body: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(
                   minWidth: constraints.maxWidth,
@@ -182,9 +186,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     controller: _firstNameController,
                                     hintTxt: "First Name",
                                     validator: (String? value) {
-                                      if (value!.isEmpty) {
-                                        return "Fist Name cannot be empty";
-                                      }
                                       return null;
                                     },
                                     capitalization: TextCapitalization.words,
@@ -200,6 +201,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       },
                                       capitalization: TextCapitalization.words),
                                   SizedBox(
+                                      height: SizeConfig.screenHeight! * .005),
+                                  CustomTextInput(
+                                    controller: _emailController,
+                                    hintTxt: "Email",
+                                    validator: (String? value) {
+                                      if (value!.isNotEmpty && isEmail(value)) {
+                                        return "Please enter a valid email";
+                                      }
+                                      return null;
+                                    },
+                                    capitalization: TextCapitalization.words,
+                                    isSpaceDenied: true,
+                                  ),
+                                  SizedBox(
                                       height: SizeConfig.screenWidth! * .05),
                                   Consumer<UserProvider>(
                                     builder: (context, userprovider, _) =>
@@ -210,17 +225,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               if (FormValidator.validate(
                                                   key: _formKey)) {
                                                 await userprovider
-                                                    .updateUserNameDataAndImage(
-                                                        context,
-                                                        firstName:
-                                                            _firstNameController
-                                                                .text
-                                                                .trim(),
-                                                        lastName:
-                                                            _lastNameController
-                                                                .text
-                                                                .trim()
-                                                                .toTitleCase());
+                                                    .updateUserData(
+                                                  context,
+                                                  firstName:
+                                                      _firstNameController.text
+                                                          .trim(),
+                                                  lastName: _lastNameController
+                                                      .text
+                                                      .trim()
+                                                      .toTitleCase(),
+                                                  email: _emailController.text
+                                                      .trim(),
+                                                );
 
                                                 Future.delayed(const Duration(
                                                         seconds: 1))

@@ -47,10 +47,11 @@ class UserDatabaseConnection {
     await FirestoreCollection.usersCollection.doc(data.id).set(data.toJson());
   }
 
-  Future<void> updateUserNameData({required UserData userData}) async {
+  Future<void> updateUserData({required UserData userData}) async {
     await FirestoreCollection.usersCollection.doc(userData.id).update({
       "firstName": userData.firstName,
       "lastName": userData.lastName,
+      "email": userData.email,
     });
   }
 
