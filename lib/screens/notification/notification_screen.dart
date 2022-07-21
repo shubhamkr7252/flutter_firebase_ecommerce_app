@@ -131,6 +131,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           buttonOnTap: () async {
                             await notificationprovider.clearNotification(
                                 userId: widget.userId);
+
+                            Navigator.of(context).pop();
                           },
                           buttonText: "Yes"));
                 },
