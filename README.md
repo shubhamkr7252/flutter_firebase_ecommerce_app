@@ -1,4 +1,4 @@
-## Flutter Firebase Ecommerce App (For Consumers Only) ##
+## Fly Buy (A Flutter Firebase Ecommerce App (For Consumers Only)) ##
 ***Screenshots***
 <br />
 <img src="screenshots/welcome_screen.png" width="200"/>
